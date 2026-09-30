@@ -1233,7 +1233,7 @@ function mailIntro(k,m){
     bescheid:'über Ihren Gastschulantrag wurde entschieden. Der Bescheid liegt in Ihrem Postfach im Antragsportal.',
     rueckfrage:'zu Ihrem Antrag gibt es eine Rückfrage. Bitte beantworten Sie sie im Portal innerhalb von 14 Tagen. Solange ruht die Bearbeitung.'}[m.type]||m.d;
 }
-function mailCta(k,m){ if(k==='satGs') return m.type==='kenntnis'?'Bescheid über Link ansehen':'Einvernehmen erklären'; return {bereit:'Bescheid erlassen', kenntnis:'Bescheid ansehen', eingang:'Antragsstand ansehen', bescheid:'Bescheid ansehen', rueckfrage:'Rückfrage beantworten'}[m.type]||'Vorgang öffnen'; }
+function mailCta(k,m){ if(k==='satGs') return m.type==='kenntnis'?'Bescheid über Link ansehen':'Einvernehmen erklären'; return {bereit:'Bescheid erlassen', kenntnis:'Bescheid ansehen', eingang:'Antragsstand ansehen', bescheid:'Bescheid ansehen', rueckfrage:'Rückfrage beantworten'}[m.type]||'Zum Gastschulverwaltungsportal'; }
 function mailUrl(k,m){ return k==='satGs' ? 'https://gastschulverwaltung.beispiel.de/e/7Qx2-Lm9R-ueK4?gueltig-bis=2026-10-07' : (k==='azubi'?'https://gastschulantrag.beispiel.de/antrag/':'https://gastschulverwaltung.beispiel.de/vorgang/')+CASE.nr; }
 function mailList(k){
   normInbox(k);
@@ -1245,14 +1245,14 @@ function mailBody(k,it){
   if(!it.sys) return '<div class="mbody"><p>'+esc(it.p)+'</p><p class="muted">– Füll-E-Mail, damit die Benachrichtigung im Postfach mit anderem Alltag konkurriert –</p></div>';
   var m=it.m, az=k==='azubi', facts;
   if(az) facts='<dt>Antrag</dt><dd>'+CASE.nr+'</dd><dt>Stand</dt><dd>'+(m.type==='bescheid'?'Bescheid liegt vor':m.type==='rueckfrage'?'Rückfrage offen':'In Prüfung')+'</dd>';
-  else facts='<dt>Vorgang</dt><dd>'+CASE.nr+'</dd><dt>Ihre Stelle</dt><dd>'+esc(STN[k].org)+'</dd><dt>Rolle im Vorgang</dt><dd>'+esc(ROLE_LBL[k])+'</dd><dt>Aufgabe</dt><dd>'+esc(m.type==='kenntnis'?'Kenntnisnahme':m.type==='bereit'?'Bescheid erlassen':STN[k].task)+'</dd>'+(m.type==='kenntnis'?'':'<dt>Frist</dt><dd>'+STN[k].frist+'</dd>');
+  else facts='';
   var foot = k==='satGs'
     ? 'Dieser Link ist befristet und an Ihr Funktionspostfach gebunden. Bitte nicht weiterleiten: Wer den Link besitzt, kann für Ihre Stelle erklären. Für eine Versagung ist eine Anmeldung über das Landesportal erforderlich.'
     : az ? 'Die Anmeldung erfolgt mit BayernID bzw. Online-Ausweis. Wir fragen nie per E-Mail nach Zugangsdaten.'
     : 'Aus Datenschutzgründen enthält diese Nachricht keine Namen und keine Antragsinhalte. Die Anmeldung erfolgt ausschließlich über '+(STN[k].kind==='schule'?'VIDIS':'das Landesportal')+'. Wir fragen nie per E-Mail nach Zugangsdaten.';
   return '<div class="mbody"><p>Guten Tag,</p><p>'+esc(mailIntro(k,m))+'</p>'+
     '<div class="mcard"><div class="mb"></div><div class="mc"><div class="brandline"><svg><use href="#wappen"/></svg>'+(az?'Gastschulantrag Berufsschule':'Gastschulverwaltung Berufsschule')+'</div>'+
-    '<dl class="mfacts">'+facts+'</dl><button class="mcta" data-mailgo="'+it.uid+'">'+ico(k==='satGs'?'i-link':'i-arr')+' '+esc(mailCta(k,m))+'</button><div class="murl">'+esc(mailUrl(k,m))+'</div></div></div>'+
+    (facts?'<dl class="mfacts">'+facts+'</dl>':'')+'<button class="mcta" data-mailgo="'+it.uid+'">'+ico(k==='satGs'?'i-link':'i-arr')+' '+esc(mailCta(k,m))+'</button><div class="murl">'+esc(mailUrl(k,m))+'</div></div></div>'+
     '<div class="mfoot">'+foot+'<br>Automatisch versendet · verantwortlich: Schulleitung Städt. BS I Augsburg (Maschinenidentität „System").</div></div>';
 }
 function viewMail(){
