@@ -160,6 +160,23 @@ button{font:inherit}
 .taskbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2)}
 .taskbar .tk{font-size:.86rem;color:var(--ink)}
 .taskbar .tk b{color:var(--navy)}
+/* Antrag-Karte (alles zum Antrag in einer Karte) */
+.acard{padding:30px 34px}
+.atitle{font-weight:600;font-size:1.6rem;color:var(--navy)}
+.ameta{display:flex;gap:16px 40px;flex-wrap:wrap;margin-top:14px}
+.asec{margin-top:26px;padding-top:22px;border-top:1px solid var(--line-2)}
+.asec-hd{display:flex;align-items:center;gap:10px;font-size:1.08rem;font-weight:600;color:var(--ink-2);margin-bottom:16px}
+.asec-hd .icon{color:var(--blue);width:20px;height:20px}
+.agrid2{display:grid;grid-template-columns:1fr 1fr;gap:28px 40px}
+.qbox{margin-top:16px;border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.rqbar{display:flex;justify-content:flex-end;margin:-8px 0 26px}
+.btn-rq{background:var(--blue-d);color:#fff;min-width:220px}
+.btn-rq:hover{background:#094e72}
+.taskcard{border:1px solid var(--blue);box-shadow:0 0 0 3px rgba(10,127,184,.08),var(--sh);margin-bottom:14px}
+.taskact{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:26px}
+.taskact .sp{margin-left:auto}
+.taskact .nh{font-size:.78rem;color:var(--muted)}
+.taskact .btn-main{width:auto;padding:11px 22px}
 .quote{background:#eef2f6;border-left:4px solid var(--blue-d);border-radius:4px;padding:14px 18px;font-style:italic;color:#3a4650;font-size:.92rem;line-height:1.65}
 .qmeta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:10px}
 .qmeta b{color:var(--ink-2);font-weight:600}
@@ -471,7 +488,12 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
   .tbl tr{grid-template-columns:1fr;gap:10px;padding:14px 16px}
   .tfoot{padding:10px 16px}
   .pager{justify-content:center}
-  .dl,.dl.three,.lw,.lw.seq,.lw-row,.idgrid,.ezgrid{grid-template-columns:1fr}
+  .dl,.dl.three,.lw,.lw.seq,.lw-row,.idgrid,.ezgrid,.agrid2{grid-template-columns:1fr}
+  .acard{padding:20px 16px}
+  .atitle{font-size:1.3rem}
+  .rqbar .btn-rq{width:100%}
+  .taskact .sp{display:none}
+  .taskact .btn-main{width:100%}
   .rrow.half{max-width:100%}
   .card{padding:18px 16px}
   .inbox{width:min(340px,92vw);right:-60px}
@@ -621,6 +643,7 @@ var CASE = {
   sorge:{name:'Max Mustermann', mail:'max.mustermann@beispiel.de', tel:'+49 176 5218 0473'},
   betrieb:{name:'Bavaria Cloud Solutions GmbH', adr:'Gewerbepark D 12, 86153 Augsburg', vertr:'Ausbildungsleitung Sandra Keller'},
   beruf:'Fachinformatiker für Anwendungsentwicklung', ajahr:'1. Ausbildungsjahr (dual)', dauer:'01.09.2026 – 31.08.2029', schuljahr:'2026/2027',
+  begrKat:'Fahrzeit / ÖPNV-Anbindung',
   begr:'Um zur Berufsschule nach Augsburg zu kommen, muss ich drei verschiedene Busse nehmen. Der Unterricht beginnt um 8:00 Uhr und ich muss um 5:30 Uhr los. Zur Gastschule in München müsste ich nur einen Bus nehmen und erst um 7:15 Uhr los, um zum Unterrichtsbeginn um 7:45 Uhr da zu sein. Beim Rückweg habe ich dasselbe Problem.',
   docs:[
     {n:'IHK_Ausbildungsvertrag_Mustermann_2026.pdf', m:'1,4 MB · Signiert durch IHK Schwaben (08.09.2026)', see:['sp','spL','gs','reg']},
@@ -795,7 +818,7 @@ function viewDash(archiv){
   var h='<div class="page"><div class="orgline">'+esc(p.org)+'</div><h1 class="hello">'+(archiv?'Archiv':'Guten Tag, '+esc(p.anrede))+'</h1>';
   if(!archiv){
     h+='<div class="kpis">'+
-      kpi('neu','Neue Eingänge','i-clip',c.neu,'Anträge',c.neu?'<span class="kt red">Zuteilung nötig</span>':'')+
+      kpi('neu','Neue Eingänge','i-clip',c.neu,'Anträge','')+
       kpi('bearb','In Bearbeitung','i-hour',c.bearb,'in meiner Verantwortung','')+
       kpi('weiter','Weitergeleitet','i-badge',c.weiter,'in Abstimmung','')+
       kpi('abg','Abgeschlossen','i-mail',c.abg,demoClosedUnread?'1 ungelesen':'im Archiv',demoClosedUnread?'<span class="kt green">Neu eingegangen</span>':'')+
@@ -914,6 +937,41 @@ function cardBegr(){
     '<div class="qmeta"><b>'+ico('i-quote','12px')+' Freitext der antragstellenden Person</b><span>Eingereicht am 21.09.2026</span></div>'+
     '<div class="quote">„'+esc(CASE.begr)+'"</div></div>';
 }
+/* Antrag auf einen Blick: Kopf, Person, Ausbildung, Begründung und Nachweise in einer Karte */
+function docList(k){
+  return '<div class="docs">'+CASE.docs.map(function(d,i){
+    var ok=d.see.indexOf(k)>-1 && !(k==='satGs'&&!S.upgraded&&d.art9);
+    if(!ok) return '<div class="doc locked"><span class="fi">'+ico('i-lock','14px')+'</span><div><div class="n">'+(d.art9?'Gesundheitsnachweis':'Dokument')+' – nicht freigegeben</div><div class="m">'+(d.art9?'Besondere Kategorie (Art. 9 DSGVO)':'Datenminimierung')+'</div></div></div>';
+    return '<div class="doc"><span class="fi">PDF</span><div><div class="n">'+esc(d.n)+'</div><div class="m">'+esc(d.m)+'</div></div><span class="sp"></span><button class="eye" data-doc="'+i+'" aria-label="Ansehen">'+ico('i-eye')+'</button></div>';
+  }).join('')+'</div>';
+}
+function cardAntrag(k){
+  var c=CASE, ps=pseudoFor(k), nf='<span class="muted">nicht freigegeben</span>';
+  function f(cap,val){ return '<div><div class="cap">'+cap+'</div><div class="val">'+val+'</div></div>'; }
+  var adr=c.kind.wohn.split(', ');
+  return '<div class="card acard">'+
+    '<h1 class="atitle">Gastschulantrag #'+c.nr+'</h1>'+
+    '<div class="ameta">'+f('Eingangsdatum','<b>'+c.eingang+'</b>')+f('Schuljahr','<b>'+c.schuljahr+'</b>')+f('Wechsel','<b>Städt. BS I Augsburg → Städt. BS München</b>')+'</div>'+
+    '<div class="asec"><div class="asec-hd">'+ico('i-user')+'Angaben zur antragstellenden Person</div>'+
+      (ps?'<div class="pseudo">'+ico('i-mask','18px')+'<span><b>Pseudonymisiert für Ihre Stelle.</b> Sie sehen die für Ihre Erklärung erforderlichen Angaben. Klarname, Geburtsdatum und Kontakt sind nicht freigegeben.</span></div>':'')+
+      '<div class="dl">'+
+        f('Name, Vorname','<b>'+esc(kidName(k))+'</b>')+f('E-Mail',ps?nf:esc(c.sorge.mail))+
+        f('Geburtsdatum',ps?nf:c.kind.geb)+f('Tel.-Nummer',ps?nf:esc(c.sorge.tel))+
+        f('Adresse',ps?esc(c.kind.gemeinde):esc(adr[0])+'<br>'+esc(adr.slice(1).join(', ')))+
+      '</div></div>'+
+    '<div class="asec"><div class="asec-hd">'+ico('i-badge')+'Beschäftigungs- bzw. Ausbildungsverhältnis</div>'+
+      '<div class="dl">'+
+        f('Sprengel-Zugehörigkeit','<b>Städt. BS I Augsburg</b> <span class="muted">(über Betriebssitz)</span>')+f('Gewünschte Gastschule','<b>Städt. BS München</b>')+
+        f('Ausbildungsberuf · Dauer der Ausbildung','<b>'+esc(c.beruf)+'</b><br>'+esc(c.dauer))+f('Ausbildungsbetrieb','<b>'+esc(c.betrieb.name)+'</b><br>'+esc(c.betrieb.adr))+
+      '</div></div>'+
+    '<div class="asec agrid2">'+
+      '<div><div class="asec-hd">'+ico('i-quote')+'Begründung des Antrags</div>'+
+        f('Angegebene Begründung','<b>'+esc(c.begrKat)+'</b>')+
+        '<div class="qbox"><div class="qmeta"><b>Freitext des Antragstellers</b><span>Eingereicht am 21.09.2026</span></div><div class="quote">„'+esc(c.begr)+'"</div></div></div>'+
+      '<div><div class="asec-hd">'+ico('i-paper')+'Eingereichte Nachweise &amp; Anlagen</div>'+docList(k)+'</div>'+
+    '</div></div>'+
+    '<div class="rqbar"><button class="btn btn-rq" data-open="ovRueck">'+ico('i-help','15px')+' Rückfrage</button></div>';
+}
 function cardStellungnahmen(){
   var items=ORDER.concat(['reg']).filter(done);
   var h='<div class="card"><div class="card-hd">'+ico('i-users')+'<h2>Stellungnahmen der beteiligten Stellen</h2><span class="sp"></span><span class="muted" style="font-size:.78rem">intern sichtbar für alle Stellen im Laufweg</span></div>';
@@ -1011,7 +1069,7 @@ function empfBox(){
 function cardTask(k){
   var s=S.stations[k], f=s.form, kind=STN[k].kind, h;
   var title = kind==='sat'?'Einvernehmen des Sachaufwandsträgers':kind==='reg'?'Entscheidung bei fehlendem Einvernehmen':k==='sp'?'Entscheidungsempfehlung':k==='spL'?'Entscheidung der Schulleitung':'Stellungnahme';
-  h='<div class="card" id="taskCard"><div class="card-hd">'+ico('i-gavel')+'<h2>'+title+'</h2></div>';
+  h='<div class="card taskcard" id="taskCard"><div class="card-hd">'+ico('i-gavel')+'<h2>'+title+'</h2></div>';
   if(k==='spL'){
     h+=empfBox()+'<div class="infobox" style="margin-bottom:6px">'+ico('i-info')+'<span>Die Sachbearbeitung hat den Antrag geprüft und eine Empfehlung abgegeben. Sie entscheiden für die <b>'+esc(STN.sp.org)+'</b>. Sie können der Empfehlung folgen oder davon abweichen.</span></div>';
   } else if(k==='sp'){
@@ -1032,10 +1090,10 @@ function cardTask(k){
     var no=ORDER.filter(function(x){return S.stations[x].status==='abgelehnt';});
     h+='<div class="infobox" style="background:var(--amber-bg);color:#6b4600">'+ico('i-alert','','color:var(--amber)')+'<span><b>Fehlendes Einvernehmen:</b> '+no.map(function(x){return esc(STN[x].short)+' – „'+esc(S.stations[x].begr)+'"';}).join('<br>')+'<br><span style="font-size:.8rem">Die Regierung der Sprengelschule hat das letzte Wort, bevor der Bescheid an die antragstellende Person geht.</span></span></div>';
   }
-  h+=votumBlock(k)+
-    '<button class="btn btn-main" id="btnSubmit" style="margin-top:6px"'+(canSubmit(k)?'':' disabled')+'>'+ico('i-check')+' '+(kind==='reg'?'Entscheidung treffen und Bescheid vorbereiten':k==='sp'?'Empfehlung an die Schulleitung senden':k==='spL'?'Entscheidung treffen und an nächste Stelle weiterleiten':'Entscheidung feststellen und an nächste Stelle weitersenden')+'</button>'+
-    '<div class="muted" style="font-size:.78rem;margin-top:6px;text-align:center">'+esc(nextHint(k))+'</div>'+
-    '<div class="btnrow"><button class="btn btn-sec" data-t="draft">'+ico('i-save','14px')+' Als Entwurf</button><button class="btn btn-sec" data-open="ovRueck">'+ico('i-help','14px')+' Rückfrage</button></div></div>';
+  h+=votumBlock(k)+'</div>'+
+    '<div class="taskact"><button class="btn btn-out" data-t="draft">'+ico('i-save','14px')+' Als Entwurf speichern</button><button class="btn btn-sec" data-open="ovRueck">'+ico('i-help','14px')+' Rückfrage</button>'+
+    '<span class="sp"></span><span class="nh">'+esc(nextHint(k))+'</span>'+
+    '<button class="btn btn-main" id="btnSubmit"'+(canSubmit(k)?'':' disabled')+'>'+(kind==='reg'?'Entscheidung treffen und Bescheid vorbereiten':k==='sp'?'Speichern und zur Prüfung an die Schulleitung':k==='spL'?'Entscheidung treffen und an nächste Stelle weiterleiten':'Entscheidung feststellen und an nächste Stelle weitersenden')+' '+ico('i-arr')+'</button></div>';
   return h;
 }
 function bindTask(k){
@@ -1203,7 +1261,7 @@ function viewCase(){
     return;
   }
   if(s.status==='offen' && !s.seen){ s.seen=true; if(k!=='sp') addLog({ev:'Vorgang übernommen', org:STN[k].short, who:STN[k].person, role:STN[k].role, lvl:2, sig:'fort'}); }
-  h+=cardTitle();
+  h+=cardAntrag(k);
   var task='';
   if(S.bescheid) task=cardBescheidDone(k);
   else if(S.phase==='bescheid' && issuer()===k) task=cardBescheidCompose(k);
@@ -1212,7 +1270,7 @@ function viewCase(){
   else if(s.status==='offen') task=cardTask(k);
   else if(done(k)) task='<div class="card"><div class="infobox ok">'+ico('i-check')+'<span><b>Ihre Erklärung ist abgegeben ('+voteLabel(k,s.status==='zugestimmt')+', '+esc(s.at)+').</b> Wartet auf: '+(waitingOn()||'Bescheid')+'.</span></div></div>';
   else task='<div class="card"><div class="infobox">'+ico('i-hour')+'<span><b>Angekündigt.</b> Ihre Aufgabe „'+esc(STN[k].task)+'" beginnt, sobald '+(S.mode==='seq'?'die vorherige Stelle':'beide Schulen')+' Stellung genommen '+(S.mode==='seq'?'hat':'haben')+'. Sie können den Antrag bereits einsehen.</span></div></div>';
-  h+=cardPerson()+cardDocs(true)+cardBegr()+(k==='spL'?cardLog()+task:task+cardLog())+'</div>';
+  h+=(k==='spL'?cardLog()+task:task+cardLog())+'</div>';
   $('#mainHost').innerHTML=h;
   bindTask(k); bindBescheid(k);
   var kb=$('#btnKenntnis'); if(kb) kb.addEventListener('click',function(){ kenntnis(k); });
