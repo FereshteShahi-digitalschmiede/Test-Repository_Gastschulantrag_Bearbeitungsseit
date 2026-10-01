@@ -617,8 +617,8 @@ function sigPill(k){ var s=SIG[k]; return '<span class="pill '+s.c+'">'+(k==='si
 /* Vorgang (Demo) */
 var CASE = {
   nr:'GS-2026-88421', eingang:'21. September 2026',
-  kind:{name:'Max Mustermann', pseudo:'S-7K3Q', geb:'14.03.2006', wohn:'Sonnenstraße 14, 85774 Unterföhring', gemeinde:'Unterföhring (Lkr. München)'},
-  sorge:{name:'Johann Gruber', mail:'j.gruber@beispiel.de', tel:'+49 89 5218-0'},
+  kind:{name:'Max Mustermann', pseudo:'S-7K3Q', geb:'14.03.2007', wohn:'Sonnenstraße 14, 85774 Unterföhring', gemeinde:'Unterföhring (Lkr. München)'},
+  sorge:{name:'Max Mustermann', mail:'max.mustermann@beispiel.de', tel:'+49 176 5218 0473'},
   betrieb:{name:'Bavaria Cloud Solutions GmbH', adr:'Gewerbepark D 12, 86153 Augsburg', vertr:'Ausbildungsleitung Sandra Keller'},
   beruf:'Fachinformatiker für Anwendungsentwicklung', ajahr:'1. Ausbildungsjahr (dual)', dauer:'01.09.2026 – 31.08.2029', schuljahr:'2026/2027',
   begr:'Um zur Berufsschule nach Augsburg zu kommen, muss ich drei verschiedene Busse nehmen. Der Unterricht beginnt um 8:00 Uhr und ich muss um 5:30 Uhr los. Zur Gastschule in München müsste ich nur einen Bus nehmen und erst um 7:15 Uhr los, um zum Unterrichtsbeginn um 7:45 Uhr da zu sein. Beim Rückweg habe ich dasselbe Problem.',
@@ -680,7 +680,7 @@ function freshState(){
       {t:'21.09.2026, 14:13', ev:'Sprengel ermittelt über Betriebssitz 86153 Augsburg → Städt. BS I Augsburg', org:'—', who:'System', role:'Sprengelverzeichnis', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'},
       {t:'21.09.2026, 14:13', ev:'Vollständigkeitsprüfung bestanden (alle Pflichtangaben, 4 Anlagen)', org:'—', who:'System', role:'Vollständigkeitscheck', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'},
       {t:'21.09.2026, 14:12', ev:'Mitantrag des Ausbildungsbetriebs bestätigt', org:'Bavaria Cloud Solutions GmbH', who:'Sandra Keller', role:'Ausbildungsleitung', lvl:3, sig:'fort'},
-      {t:'21.09.2026, 14:12', ev:'Antrag eingereicht für Max Mustermann (Datensubjekt, ohne Login)', org:'—', who:'Johann Gruber', role:'Sorgeberechtigter', lvl:1, sig:'qual'}
+      {t:'21.09.2026, 14:12', ev:'Antrag eingegangen', org:'—', who:'Max Mustermann', role:'Antragsteller (volljährig)', lvl:1, sig:'qual'}
     ]};
 }
 function done(k){ var s=S.stations[k].status; return s==='zugestimmt'||s==='abgelehnt'; }
@@ -730,7 +730,7 @@ function renderHeader(){
   var k=S.persona, h='<div class="band"></div><header class="hdr"><div class="in">';
   if(k==='azubi'){
     h+='<button class="brand" data-go="case"><svg><use href="#wappen"/></svg><span><span class="t1">Gastschulantrag Berufsschule</span><span class="t2">Freistaat Bayern · Antragstellenden-Bereich</span></span></button>'+
-       '<nav class="nav"><span class="user"><span class="nmx">Johann Gruber</span><span class="av">'+ico('i-user')+'</span><button class="logout" data-logout="1">Abmelden</button></span></nav>';
+       '<nav class="nav"><span class="user"><span class="nmx">Max Mustermann</span><span class="av">'+ico('i-user')+'</span><button class="logout" data-logout="1">Abmelden</button></span></nav>';
   } else if(isLink()){
     h+='<span class="brand"><svg><use href="#wappen"/></svg><span><span class="t1">Gastschulverfahren · Einvernehmen</span><span class="t2">Delegierter Zugang über Signatur-Link</span></span></span>'+
        '<nav class="nav"><span class="pill sig-einf" style="font-size:.76rem;padding:5px 12px">'+ico('i-link','12px')+' Link gültig bis 07.10.2026 · kein Konto</span><button class="logout" data-logout="1">Link schließen</button></nav>';
@@ -753,7 +753,7 @@ function renderHeader(){
     box.innerHTML='<h4>Nachrichten · '+esc(STN[k].short)+'</h4>'+(list.length?list.map(function(m){return '<div class="it" data-go="'+m.go+'"><b>'+esc(m.t)+'</b><span>'+esc(m.d)+'</span></div>';}).join(''):'<div class="empty">Keine Nachrichten.</div>');
     box.hidden=!box.hidden; readCount[k]=S.inbox[k].length; var c=bb.querySelector('.cnt'); if(c) c.remove();
   });
-  var p=k==='azubi'?'Johann Gruber · Antragsteller (Portal)':isLink()?'LH München · per Signatur-Link':STN[k].person+' · '+STN[k].short;
+  var p=k==='azubi'?'Max Mustermann · Antragsteller (Portal)':isLink()?'LH München · per Signatur-Link':STN[k].person+' · '+STN[k].short;
   $('#protoWho').textContent='Ansicht: '+p;
 }
 function renderFooter(){
@@ -896,11 +896,11 @@ function cardTitle(){
 function cardPerson(){
   var k=S.persona, ps=pseudoFor(k), c=CASE;
   var h='<div class="card"><div class="card-hd">'+ico('i-user')+'<h2>Angaben zur antragstellenden Person</h2></div>';
-  if(ps) h+='<div class="pseudo">'+ico('i-mask','18px')+'<span><b>Pseudonymisiert für Ihre Stelle.</b> Sie sehen die für Ihre Erklärung erforderlichen Angaben. Die Schülerin/der Schüler ist Datensubjekt ohne Login; Klarname, Geburtsdatum und Kontakt sind nicht freigegeben.</span></div>';
+  if(ps) h+='<div class="pseudo">'+ico('i-mask','18px')+'<span><b>Pseudonymisiert für Ihre Stelle.</b> Sie sehen die für Ihre Erklärung erforderlichen Angaben. Klarname, Geburtsdatum und Kontakt der antragstellenden Person sind nicht freigegeben.</span></div>';
   h+='<div class="dl">'+
     '<div><div class="cap">Antragsteller / Auszubildender</div><div class="val"><b>'+esc(kidName(k))+'</b></div></div>'+
     '<div><div class="cap">Geburtsdatum</div><div class="val">'+(ps?'<span class="muted">nicht freigegeben</span>':c.kind.geb)+'</div></div>'+
-    '<div><div class="cap">Antrag gestellt durch</div><div class="val">'+(ps?'Sorgeberechtigte Person <span class="muted">(Identität per eID verifiziert)</span>':'<b>'+c.sorge.name+'</b> · sorgeberechtigt <span class="pill sig-qual" style="margin-left:4px">'+ico('i-sign','11px')+' eID</span>')+'</div></div>'+
+    '<div><div class="cap">Antrag gestellt durch</div><div class="val">'+(ps?'Antragsteller:in selbst (volljährig) <span class="muted">(Identität per eID verifiziert)</span>':'<b>'+c.sorge.name+'</b> · selbst, volljährig <span class="pill sig-qual" style="margin-left:4px">'+ico('i-sign','11px')+' eID</span>')+'</div></div>'+
     '<div><div class="cap">Kontakt</div><div class="val">'+(ps?'<span class="muted">nicht freigegeben</span>':c.sorge.mail+'<br>'+c.sorge.tel)+'</div></div>'+
     '<div><div class="cap">Wohnsitz</div><div class="val">'+(ps?c.kind.gemeinde:c.kind.wohn)+'</div></div>'+
     '<div><div class="cap">Sprengel-Zugehörigkeit</div><div class="val"><b>Städt. BS I Augsburg</b> <span class="muted">(über Betriebssitz)</span></div></div>'+
@@ -1104,7 +1104,7 @@ function bsdObject(b, preview){
       '<div class="bsd-sec"><div class="k">Rechtsgrundlage</div><div class="v">'+esc(b.rg)+'</div></div>'+
       '<div class="bsd-sec"><div class="k">Begründung</div><div class="v">'+(b.begr?esc(b.begr):'<span class="muted">– noch nicht verfasst –</span>')+'</div></div>'+
       '<div class="bsd-sec"><div class="k">Geltungszeitraum</div><div class="v">'+esc(yes?b.gelt:'—')+'</div></div>'+
-      '<div class="bsd-sec"><div class="k">Zustellung &amp; Abdruck</div><div class="v">Zustellung: Johann Gruber (BayernPortal-Postfach) · Mitantragsteller Bavaria Cloud Solutions GmbH<br>Abdruck: alle beteiligten Stellen'+(yes?' · <b>neu kostenersatzpflichtig: Stadt Augsburg</b>':'')+'</div></div>'+
+      '<div class="bsd-sec"><div class="k">Zustellung &amp; Abdruck</div><div class="v">Zustellung: Max Mustermann (BayernPortal-Postfach) · Mitantragsteller Bavaria Cloud Solutions GmbH<br>Abdruck: alle beteiligten Stellen'+(yes?' · <b>neu kostenersatzpflichtig: Stadt Augsburg</b>':'')+'</div></div>'+
       '<div class="bsd-sec"><div class="k">Rechtsbehelfsbelehrung</div><div class="v" style="font-size:.84rem;color:var(--muted)">'+RBB+'</div></div>'+
       '<div class="bsd-sec"><div class="k">Signatur</div><div class="v">'+sigPill('siegel')+' <span class="lvl">3</span> '+esc(STN[b.k].org)+' · ausgelöst durch <span class="lvl">2</span> '+esc(STN[b.k].person)+' ('+esc(STN[b.k].role)+', zeichnungsbefugt)</div></div>'+
     '</div></div>';
@@ -1144,7 +1144,7 @@ function issueBescheid(){
   var k=issuer(), at=now();
   S.bescheid={k:k, entsch:finalDecision(), rg:bdraft.rg, begr:bdraft.begr.trim(), gelt:bdraft.gelt, at:at};
   addLog({t:at, ev:'Bescheid erlassen: '+(S.bescheid.entsch==='genehmigt'?'Genehmigt':'Abgelehnt'), org:STN[k].short, who:STN[k].person, role:STN[k].role+' (Siegel ausgelöst)', lvl:3, sig:'siegel'});
-  addLog({ev:'Bescheid zugestellt an Johann Gruber (BayernPortal-Postfach) und Mitantragsteller', org:'—', who:'System', role:'Zustellung', lvl:5, sig:'sys', resp:'Leitung '+STN[k].short});
+  addLog({ev:'Bescheid zugestellt an Max Mustermann (BayernPortal-Postfach) und Mitantragsteller', org:'—', who:'System', role:'Zustellung', lvl:5, sig:'sys', resp:'Leitung '+STN[k].short});
   addLog({ev:'Abdruck an alle beteiligten Stellen'+(S.bescheid.entsch==='genehmigt'?' · neu kostenersatzpflichtig: Stadt Augsburg':''), org:'—', who:'System', role:'Zustellung', lvl:5, sig:'sys', resp:'Leitung '+STN[k].short});
   S.stations[k].kenntnis=true;
   ['sp','gs','satSp','satGs','reg'].forEach(function(x){ if(x!==k && (x!=='reg'||done('reg'))) S.inbox[x].push({t:'Bescheid zur Kenntnis: GS-2026-88421', d:(S.bescheid.entsch==='genehmigt'?'Genehmigt':'Abgelehnt')+' · Abdruck', go:'case', type:'kenntnis'}); });
@@ -1167,7 +1167,7 @@ function cardIdent(){
   var link = S.upgraded ? 'hochgestuft: <b>Petra Lindner</b> handelt jetzt als Funktionsidentität' : (S.linkIssued ? 'Link an '+STN.satGs.linkMail+' · gültig bis 07.10.2026' : 'Link wird erzeugt, sobald die Stelle an der Reihe ist');
   function c(n,ic,t,e,x){ return '<div class="idc"><div class="h"><span class="lvl">'+n+'</span>'+ico(ic,'16px','color:var(--blue)')+' '+t+'</div><div class="e">'+e+'</div><div class="x">'+x+'</div></div>'; }
   return '<div class="card"><div class="card-hd">'+ico('i-id')+'<h2>Identitäten in diesem Vorgang</h2><span class="sp"></span><span class="muted" style="font-size:.78rem">6 Ebenen · werden nie vermischt</span></div><div class="idgrid">'+
-    c(1,'i-user','Bürger:in','<b>Johann Gruber</b> · sorgeberechtigt · eID/BundID '+sigPill('qual'),'Anmeldung, Identitätsnachweis, Signatur des Antrags. Hier hängt das Sorgerecht.')+
+    c(1,'i-user','Bürger:in','<b>Max Mustermann</b> · Antragsteller, volljährig · eID/BundID '+sigPill('qual'),'Anmeldung, Identitätsnachweis, Signatur des Antrags. Der Auszubildende handelt selbst.')+
     c(2,'i-users','Funktionsidentität',acted.length?esc(acted.join(', ')):'<span class="muted">noch keine Erklärung abgegeben</span>','Dienstliches Handeln über VIDIS/Landesportal. Rollenvergabe durch die Schul- bzw. Behördenverwaltung, nicht durch das System.')+
     c(3,'i-bank','Organisationskonto','4 Pflichtstellen'+(done('reg')||S.stations.reg.status==='offen'?' + Regierung von Schwaben':'')+' · Betrieb als Mitantragsteller','Die Organisation trägt die Erklärung und die Haftung – vertreten durch eine Rolle. Bescheid mit Siegel.')+
     c(4,'i-link','Delegierte Identität','LH München (RBS) · '+link+' '+sigPill('einf'),'Ohne Account. Reicht für Zustimmung und Kenntnisnahme, nicht für belastende Erklärungen oder Art.-9-Daten.')+
@@ -1175,10 +1175,17 @@ function cardIdent(){
     c(6,'i-mask','Datensubjekt','<b>Max Mustermann</b> · Pseudonym '+CASE.kind.pseudo+' · kein Login','Pseudonymisiert gegenüber '+(S.pseudo==='alle'?'allen Stellen außer der Regierung':'den Sachaufwandsträgern')+'. Optional Attributsnachweise über die Wallet.')+
   '</div><div class="rule"><b>Kernregel:</b> Jede Signatur wird in der Ebene geleistet, deren rechtliche Wirkung die Aktion verlangt – und zu jeder Signatur ist sichtbar, von wem, in welcher Rolle und mit welcher Qualität.</div></div>';
 }
+/* Protokoll dieses Antrags: nur Eingang, Zuweisung und die Arbeitsschritte der Sachbearbeitung (keine Systemschritte) */
+function caseLogEntries(){
+  return S.log.filter(function(e){
+    return /^Antrag eingegangen|zugewiesen an/.test(e.ev) || e.lvl===2 || e.lvl===4 || /^Bescheid erlassen/.test(e.ev);
+  });
+}
 function cardLog(){
-  return '<div class="card"><div class="card-hd">'+ico('i-list')+'<h2>Revisionsprotokoll</h2><span class="sp"></span><span class="pill sig-sys">'+ico('i-lock','11px')+' append-only · unveränderlich</span></div><div class="tblwrap"><table class="ptbl"><thead><tr><th>Zeitpunkt</th><th>Ereignis</th><th>Erklärende Stelle</th><th>Handelnd · Rolle</th><th>Ebene</th><th>Signatur</th></tr></thead><tbody>'+
-    S.log.map(function(e){
-      return '<tr><td style="white-space:nowrap">'+esc(e.t)+'</td><td>'+esc(e.ev)+'</td><td>'+esc(e.org)+'</td><td><b style="font-weight:600">'+esc(e.who)+'</b><span class="s">'+esc(e.role)+(e.resp?' · verantwortlich: '+esc(e.resp):'')+'</span></td><td><span class="lvl" title="'+LVL[e.lvl]+'">'+e.lvl+'</span> <span class="s" style="display:inline">'+LVL[e.lvl]+'</span></td><td>'+sigPill(e.sig)+'</td></tr>';
+  return '<div class="card"><div class="card-hd">'+ico('i-list')+'<h2>Revisionsprotokoll</h2></div><div class="tblwrap"><table class="ptbl"><thead><tr><th>Zeitpunkt</th><th>Ereignis</th><th>Bearbeitet von</th></tr></thead><tbody>'+
+    caseLogEntries().map(function(e){
+      var who = /zugewiesen an/.test(e.ev) ? '<span class="muted">automatisch</span>' : '<b style="font-weight:600">'+esc(e.who)+'</b><span class="s">'+esc(e.role)+(e.org&&e.org!=='—'?' · '+esc(e.org):'')+'</span>';
+      return '<tr><td style="white-space:nowrap">'+esc(e.t)+'</td><td>'+esc(e.ev)+'</td><td>'+who+'</td></tr>';
     }).join('')+'</tbody></table></div></div>';
 }
 
@@ -1205,7 +1212,7 @@ function viewCase(){
   else if(s.status==='offen') task=cardTask(k);
   else if(done(k)) task='<div class="card"><div class="infobox ok">'+ico('i-check')+'<span><b>Ihre Erklärung ist abgegeben ('+voteLabel(k,s.status==='zugestimmt')+', '+esc(s.at)+').</b> Wartet auf: '+(waitingOn()||'Bescheid')+'.</span></div></div>';
   else task='<div class="card"><div class="infobox">'+ico('i-hour')+'<span><b>Angekündigt.</b> Ihre Aufgabe „'+esc(STN[k].task)+'" beginnt, sobald '+(S.mode==='seq'?'die vorherige Stelle':'beide Schulen')+' Stellung genommen '+(S.mode==='seq'?'hat':'haben')+'. Sie können den Antrag bereits einsehen.</span></div></div>';
-  h+=cardPerson()+cardDocs(true)+cardBegr()+(k==='spL'?cardIdent()+cardLog()+task:task+cardIdent()+cardLog())+'</div>';
+  h+=cardPerson()+cardDocs(true)+cardBegr()+(k==='spL'?cardLog()+task:task+cardLog())+'</div>';
   $('#mainHost').innerHTML=h;
   bindTask(k); bindBescheid(k);
   var kb=$('#btnKenntnis'); if(kb) kb.addEventListener('click',function(){ kenntnis(k); });
@@ -1240,7 +1247,7 @@ function viewLink(){
 function viewAzubi(){
   var b=S.bescheid;
   function tr(cls,ic,t,d){ return '<div class="ptr '+cls+'"><span class="mk">'+ico(ic,'16px')+'</span><div><div class="tt">'+t+'</div><div class="td">'+d+'</div></div></div>'; }
-  var h='<div class="page narrow"><h1 class="hello" style="font-size:2.1rem;margin-bottom:6px">Ihr Gastschulantrag</h1><p class="muted" style="margin-bottom:24px">'+CASE.nr+' · für Max Mustermann · eingereicht am 21.09.2026</p>'+
+  var h='<div class="page narrow"><h1 class="hello" style="font-size:2.1rem;margin-bottom:6px">Ihr Gastschulantrag</h1><p class="muted" style="margin-bottom:24px">'+CASE.nr+' · eingereicht am 21.09.2026</p>'+
     '<div class="card"><div class="card-hd">'+ico('i-route')+'<h2>Aktueller Stand</h2><span class="sp"></span><span class="st '+(b?'st-abg':'st-bearb')+'">'+azubiText()+'</span></div><div class="ptrack">'+
       tr('done','i-check','Antrag eingegangen','21.09.2026 · Eingangsbestätigung im BayernPortal-Postfach')+
       tr(b?'done':'now',b?'i-check':'i-hour','Prüfung durch die beteiligten Stellen','Schulen und Sachaufwandsträger prüfen Ihren Antrag. Sie müssen nichts tun.')+
@@ -1249,15 +1256,15 @@ function viewAzubi(){
     '</div><div class="infobox" style="margin-top:6px">'+ico('i-eye')+'<span>Sie sehen den Gesamtstand. Welche Stelle wie Stellung genommen hat, wird nicht angezeigt – maßgeblich ist der Bescheid.</span></div>'+
     (b?'':'<div class="infobox" style="margin-top:10px;background:var(--amber-bg);color:#6b4600">'+ico('i-info','','color:var(--amber)')+'<span>Bis zur Entscheidung besuchen Sie weiterhin die <b>Städtische Berufsschule I Augsburg</b>.</span></div>')+'</div>';
   if(b) h+='<div class="card"><div class="card-hd">'+ico('i-seal')+'<h2>Ihr Bescheid</h2></div>'+bsdObject(b,false)+'</div>';
-  h+='<div class="card"><div class="sigbox" style="margin:0">'+ico('i-id')+'<div><div class="ln"><span class="lvl">1</span> Angemeldet als <b>Johann Gruber</b> über eID/BundID '+sigPill('qual')+'</div><div class="ln">Handelnd als Sorgeberechtigter für Max Mustermann (Datensubjekt, kein eigenes Konto)</div></div></div></div></div>';
+  h+='<div class="card"><div class="sigbox" style="margin:0">'+ico('i-id')+'<div><div class="ln"><span class="lvl">1</span> Angemeldet als <b>Max Mustermann</b> über eID/BundID '+sigPill('qual')+'</div><div class="ln">Handelnd als Antragsteller (volljährig, 19 Jahre) in eigener Sache</div></div></div></div></div>';
   $('#mainHost').innerHTML=h;
 }
 
 /* ============================================================
    POSTFACH- & PUSH-SIMULATOR  (Warum kommt jemand auf die Website?)
    ============================================================ */
-var MAILADR={sp:'t.schneider@bs1-augsburg.beispiel.de', spL:'c.hofmann@bs1-augsburg.beispiel.de', gs:'a.huber@bs-it-muenchen.beispiel.de', satSp:'m.weber@augsburg.beispiel.de', satGs:'gastschulen-rbs@beispiel.de', reg:'n.krueger@reg-schwaben.beispiel.de', azubi:'j.gruber@beispiel.de'};
-var OWNER={sp:'Thomas Schneider · Städt. BS I Augsburg', spL:'Dr. Claudia Hofmann · Schulleitung Städt. BS I Augsburg', gs:'Anna Huber · Städt. BS München', satSp:'Markus Weber · Stadt Augsburg', satGs:'Funktionspostfach „Gastschulbeiträge" · LH München (RBS)', reg:'Dr. Nadine Krüger · Regierung von Schwaben', azubi:'Johann Gruber · privat'};
+var MAILADR={sp:'t.schneider@bs1-augsburg.beispiel.de', spL:'c.hofmann@bs1-augsburg.beispiel.de', gs:'a.huber@bs-it-muenchen.beispiel.de', satSp:'m.weber@augsburg.beispiel.de', satGs:'gastschulen-rbs@beispiel.de', reg:'n.krueger@reg-schwaben.beispiel.de', azubi:'max.mustermann@beispiel.de'};
+var OWNER={sp:'Thomas Schneider · Städt. BS I Augsburg', spL:'Dr. Claudia Hofmann · Schulleitung Städt. BS I Augsburg', gs:'Anna Huber · Städt. BS München', satSp:'Markus Weber · Stadt Augsburg', satGs:'Funktionspostfach „Gastschulbeiträge" · LH München (RBS)', reg:'Dr. Nadine Krüger · Regierung von Schwaben', azubi:'Max Mustermann · privat'};
 var SENDER='Gastschulverwaltung Bayern', SENDADR='benachrichtigung@gastschulverwaltung.beispiel.de';
 var FILLER={
   sp:[{from:'Sekretariat BS I Augsburg', s:'Dienstbesprechung am Freitag, 10:00 Uhr', p:'Liebe Kolleginnen und Kollegen, anbei die Tagesordnung für Freitag.', at:'22.09.2026, 16:05'},{from:'Schulverwaltung Newsletter', s:'Termine im Schuljahr 2026/2027', p:'Die wichtigsten Termine und Fristen im Überblick.', at:'21.09.2026, 08:30'}],
@@ -1285,7 +1292,7 @@ function mailIntro(k,m){
     bereit:'alle erforderlichen Erklärungen liegen vor. Der Bescheid kann jetzt von Ihrer Stelle erlassen werden.',
     kenntnis:'zum Vorgang wurde ein Bescheid erlassen. Bitte nehmen Sie ihn zur Kenntnis. Für Ihre Stelle ist keine weitere Erklärung nötig.',
     link:'die Städtische Berufsschule I Augsburg bittet Ihre Stelle als Sachaufwandsträger der Gastschule um das Einvernehmen. Sie können ohne Konto über den folgenden persönlichen Link antworten.',
-    eingang:'Ihr Gastschulantrag ist eingegangen. Den aktuellen Stand sehen Sie jederzeit im Antragsportal. Bis zur Entscheidung besucht Max weiterhin die Sprengelschule.',
+    eingang:'Ihr Gastschulantrag ist eingegangen. Den aktuellen Stand sehen Sie jederzeit im Antragsportal. Bis zur Entscheidung besuchen Sie weiterhin die Sprengelschule.',
     bescheid:'über Ihren Gastschulantrag wurde entschieden. Der Bescheid liegt in Ihrem Postfach im Antragsportal.',
     rueckfrage:'zu Ihrem Antrag gibt es eine Rückfrage. Bitte beantworten Sie sie im Portal innerhalb von 14 Tagen. Solange ruht die Bearbeitung.'}[m.type]||m.d;
 }
@@ -1384,13 +1391,13 @@ function viewLogin(){
   var deep = S.deeplink==='case' ? '<div class="deepnote">'+ico('i-link')+'<span>Sie kommen über einen Link aus einer Benachrichtigung zu <b>Vorgang '+CASE.nr+'</b>. Nach der Anmeldung geht es direkt dorthin.</span></div>' : '';
   if(L.variant==='buerger'){
     var st2=L.step===2;
-    h='<div class="lgsteps"><div class="'+(st2?'ok':'on')+'"><b>'+(st2?ico('i-check','11px'):'1')+'</b>Anmeldung</div><div class="'+(st2?'on':'')+'"><b>2</b>Vertretung prüfen</div></div><div class="lgbody">'+deep;
+    h='<div class="lgsteps"><div class="'+(st2?'ok':'on')+'"><b>'+(st2?ico('i-check','11px'):'1')+'</b>Anmeldung</div><div class="'+(st2?'on':'')+'"><b>2</b>Antrag zuordnen</div></div><div class="lgbody">'+deep;
     if(!st2) h+='<h1>Anmeldung Antragstellenden-Bereich</h1><p class="lead">Melden Sie sich mit Ihrer BayernID bzw. dem Online-Ausweis an. Ein eigenes Passwort für das Antragsportal gibt es nicht.</p>'+
-      '<div class="idp" style="grid-template-columns:1fr"><button class="idpt on" data-idp="bayernid"><span class="h">'+ico('i-id')+' Mit BayernID / eID anmelden</span><p>Für Antragstellende, Sorgeberechtigte und volljährige Auszubildende · Vertrauensniveau hoch</p></button></div>'+
+      '<div class="idp" style="grid-template-columns:1fr"><button class="idpt on" data-idp="bayernid"><span class="h">'+ico('i-id')+' Mit BayernID / eID anmelden</span><p>Für volljährige Auszubildende und Antragstellende · Vertrauensniveau hoch</p></button></div>'+
       '<div class="lgnav"><span class="l">Simulation – es werden keine Daten abgefragt.</span><button class="btn btn-main" style="width:auto" data-lgnext="1">Anmelden</button></div>';
     else h+='<h1>Identität geprüft</h1><div class="recog">'+
-      rg('Identität bestätigt','<b>Johann Gruber</b> · BayernID mit Online-Ausweis · Vertrauensniveau hoch','Ebene 1 · Bürger:in','')+
-      rg('Vertretung','sorgeberechtigt für <b>Max Mustermann</b> (minderjährig) – laut Erklärung im Antrag','aus Antrag','ant')+
+      rg('Identität bestätigt','<b>Max Mustermann</b> · BayernID mit Online-Ausweis · Vertrauensniveau hoch','Ebene 1 · Bürger:in','')+
+      rg('Antragsteller','<b>Max Mustermann</b> · volljährig (19 Jahre) – stellt den Antrag selbst','aus Antrag','ant')+
       rg('Vorgang','<b>'+CASE.nr+'</b> · Stand: '+azubiText(),'aus Antrag','ant')+
       '</div><div class="lgnav"><button class="btn btn-main" style="width:auto" id="btnLgDone" disabled>Weiter zu Ihrem Antrag '+ico('i-arr')+'</button></div>';
     h+='</div>';
@@ -1432,7 +1439,7 @@ function finishLogin(){
   if(k==='reg' && !taskState('reg').ok) target='dash';
   if(k==='azubi') target='case';
   S.deeplink=null; S.screen=target; render(); window.scrollTo({top:0});
-  toast('Angemeldet als '+(k==='azubi'?'Johann Gruber (Sorgeberechtigter)':STN[k].person+' · '+STN[k].short+' – Rolle im Vorgang: '+ROLE_LBL[k]));
+  toast('Angemeldet als '+(k==='azubi'?'Max Mustermann (Antragsteller)':STN[k].person+' · '+STN[k].short+' – Rolle im Vorgang: '+ROLE_LBL[k]));
 }
 function startAs(k){
   S.persona=k; S.loggedIn=false; S.session=null; S.screen='mail'; S.mailSel=null; S.login=freshLogin(k);
@@ -1466,7 +1473,7 @@ function render(keepScroll){
   renderPanel();
   if(keepScroll) window.scrollTo({top:y});
 }
-var PLIST=[['sp','Thomas Schneider','Sprengelschule · Städt. BS I Augsburg'],['spL','Dr. Claudia Hofmann','Schulleitung · Städt. BS I Augsburg'],['gs','Anna Huber','Gastschule · Städt. BS München'],['satSp','Markus Weber','Träger Sprengelschule · Stadt Augsburg'],['satGs','LH München (RBS)','Träger Gastschule · per Signatur-Link'],['reg','Dr. Nadine Krüger','Regierung von Schwaben · nur bei Dissens'],['azubi','Johann Gruber','Antragsteller · Portal-Sicht']];
+var PLIST=[['sp','Thomas Schneider','Sprengelschule · Städt. BS I Augsburg'],['spL','Dr. Claudia Hofmann','Schulleitung · Städt. BS I Augsburg'],['gs','Anna Huber','Gastschule · Städt. BS München'],['satSp','Markus Weber','Träger Sprengelschule · Stadt Augsburg'],['satGs','LH München (RBS)','Träger Gastschule · per Signatur-Link'],['reg','Dr. Nadine Krüger','Regierung von Schwaben · nur bei Dissens'],['azubi','Max Mustermann','Antragsteller · Portal-Sicht']];
 function renderPanel(){
   $('#personaBtns').innerHTML=PLIST.map(function(p){
     var badge=''; if(STN[p[0]]){ var st=S.stations[p[0]].status; if(st==='offen') badge=' · Aufgabe offen'; if(S.phase==='bescheid'&&issuer()===p[0]) badge=' · Bescheid erlassen'; }
