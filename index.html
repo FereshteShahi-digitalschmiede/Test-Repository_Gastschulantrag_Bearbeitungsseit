@@ -13,7 +13,7 @@
   --muted:#6b7a86; --muted-2:#93a1ac; --bg:#edf2f6; --card:#fff; --field:#eef2f5; --line:#dde5eb; --line-2:#e9eef2;
   --tbl-hd:#d5e8f4; --tbl-sub:#e6f1f8; --foot:#b8dcee;
   --green:#1c6b3e; --green-bg:#def5e5; --red:#a3261c; --red-bg:#fde3e0; --amber:#9a6200; --amber-bg:#fdf1dc;
-  --violet:#5a4aa0; --violet-bg:#eeeafb; --grey-bg:#eef2f5;
+  --violet:#0b5f8a; --violet-bg:#e3f0f8; /* früher Lila – auf Wunsch durchgehend Blau */ --grey-bg:#eef2f5;
   --ff:'Fira Sans','Segoe UI',system-ui,sans-serif; --ffc:'Fira Sans Condensed','Fira Sans','Segoe UI',sans-serif;
   --r:8px; --sh:0 1px 2px rgba(13,74,107,.05),0 3px 12px rgba(13,74,107,.06); --sh-lg:0 6px 16px rgba(13,74,107,.1),0 24px 48px rgba(13,74,107,.14);
 }
@@ -112,7 +112,7 @@ button{font:inherit}
 .tbl .az{font-size:.76rem;color:var(--muted);margin-top:2px}
 .tbl .sub{font-size:.8rem;color:var(--muted);margin-top:2px}
 .wx{display:grid;gap:3px;font-size:.93rem}
-.wx span{display:flex;align-items:center;gap:8px}
+.wx>span{display:flex;align-items:center;gap:8px}
 .wx .icon{color:var(--blue);width:16px;height:16px}
 .wx .me{font-weight:700;color:var(--navy)}
 .tfoot{background:var(--tbl-sub);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:10px 28px;font-size:.86rem;color:var(--ink-2)}
@@ -120,18 +120,71 @@ button{font:inherit}
 .pager button{min-width:36px;height:34px;border:0;background:none;border-radius:4px;cursor:pointer;color:var(--ink-2);font-size:.82rem}
 .pager button.on{background:var(--blue-d);color:#fff}
 .tblwrap{overflow-x:auto}
+/* Suche, Filter, aktive Filter */
+.tbar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;padding:14px 28px;border-bottom:1px solid var(--line-2);background:#fff}
+.srch{position:relative;flex:1 1 320px;max-width:560px}
+.srch>.icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);width:17px;height:17px;pointer-events:none}
+.srch input{width:100%;font:inherit;font-size:.92rem;padding:10px 38px 10px 38px;border:1px solid var(--line);border-radius:6px;background:var(--field);color:var(--ink)}
+.srch input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(10,127,184,.15)}
+.srch .clr{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:none;cursor:pointer;color:var(--muted);padding:6px 9px;display:flex}
+.srch .clr:hover{color:var(--ink)}
+.fltwrap{position:relative;margin-left:auto}
+.btn-filter.on{background:#dbe9f3;color:var(--navy)}
+.btn-filter .n{background:var(--blue);color:#fff;border-radius:99px;font-size:.7rem;line-height:18px;padding:0 6px;min-width:18px;text-align:center}
+.fltpop{position:absolute;right:0;top:calc(100% + 8px);width:min(310px,86vw);background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--sh-lg);z-index:200;padding:16px 18px 12px;text-align:left}
+.fltpop h5{margin:14px 0 4px;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fltpop h5:first-child{margin-top:0}
+.fltpop label{display:flex;gap:9px;align-items:center;padding:5px 0;font-size:.9rem;cursor:pointer;color:var(--ink-2)}
+.fltpop input{accent-color:var(--blue);margin:0}
+.fltpop .ft{display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--line-2);padding-top:10px}
+.fltpop .ft button{background:none;border:0;cursor:pointer;font-weight:600;font-size:.84rem;padding:4px 0;color:var(--blue-d)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 28px;background:#f6fafc;border-bottom:1px solid var(--line-2);font-size:.84rem;color:var(--ink-2)}
+.chip-f{display:inline-flex;align-items:center;gap:6px;background:#e1eef7;color:var(--navy);border:0;border-radius:99px;padding:3px 5px 3px 11px;font-weight:600;font-size:.78rem;cursor:pointer;font-family:inherit}
+.chip-f .icon{width:14px;height:14px;padding:2px;border-radius:50%;background:rgba(13,74,107,.12);box-sizing:content-box}
+.chip-f:hover{background:#d2e5f2}
+.clrall{background:none;border:0;color:var(--blue-d);font-weight:600;cursor:pointer;text-decoration:underline;font-size:.82rem;font-family:inherit;margin-left:4px}
+.tbl mark{background:#fff0a8;color:inherit;border-radius:2px;padding:0 1px}
+.dauer b{font-weight:500;display:block}
+.tbl td .st{white-space:normal;line-height:1.35;align-items:flex-start}
+.tbl td .st::before{margin-top:5px}
+.tbl td .st-genehmigt::before,.tbl td .st-abgelehnt::before{margin-top:0}
+/* Archiv: Gruppen nach Schuljahr */
+.sjtools{display:flex;justify-content:flex-end;gap:4px;padding:8px 20px 0}
+.sjgrp{border-top:1px solid var(--line-2)}
+.sjgrp:first-of-type{border-top:0}
+.sjgrp>summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:16px 28px;cursor:pointer;background:#fff}
+.sjgrp>summary::-webkit-details-marker{display:none}
+.sjgrp>summary:hover{background:#f5fafd}
+.sjgrp[open]>summary{background:var(--tbl-sub)}
+.sjgrp .chev{width:18px;height:18px;color:var(--blue);transition:transform .15s}
+.sjgrp[open] .chev{transform:rotate(90deg)}
+.sjgrp .sjt{font-weight:600;font-size:1.08rem;color:var(--navy)}
+.sjgrp .sjc{font-size:.84rem;color:var(--muted)}
+.sjgrp .sjs{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.sjgrp .curp{font-size:.68rem;font-weight:700;letter-spacing:.04em;background:var(--blue);color:#fff;border-radius:99px;padding:2px 9px}
+.sjgrp .tbl th{background:#f3f8fb}
+/* gleiche Spaltenbreiten in allen Schuljahr-Gruppen */
+.sjgrp .tbl{table-layout:fixed}
+.sjgrp .tbl th:nth-child(1){width:17%}.sjgrp .tbl th:nth-child(2){width:22%}.sjgrp .tbl th:nth-child(3){width:14%}.sjgrp .tbl th:nth-child(4){width:19%}.sjgrp .tbl th:nth-child(5){width:13%}.sjgrp .tbl th:nth-child(6){width:15%}
+.empty-list{text-align:center;color:var(--muted);padding:34px 20px}
 
 /* ---------- Badges / Pills ---------- */
 .st{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;font-weight:600;border-radius:3px;padding:4px 11px;white-space:nowrap}
 .st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
-.st-bearb{background:#cfe6f5;color:var(--navy)} .st-bearb::before{background:var(--blue)}
 .st-neu{background:var(--green-bg);color:var(--green)}
-.st-weiter{background:#eef2f5;color:#7b8792}
+/* In Bearbeitung / In Prüfung: blau = liegt bei mir, grau = liegt bei einer anderen Stelle */
+.st-bearb{background:#cfe6f5;color:var(--navy)} .st-bearb::before{background:var(--blue)}
+.st-pruef{background:#cfe6f5;color:var(--navy)} .st-pruef::before{background:var(--blue)}
+.st.other{background:#eef2f5;color:#6f7c87} .st.other::before{background:#a3afb8}
+/* Abschluss: Genehmigt / Abgelehnt statt "Abgeschlossen" */
+.st-genehmigt,.st-abgelehnt{gap:6px}
+.st-genehmigt{background:var(--green-bg);color:var(--green)} .st-genehmigt::before{content:"✓";width:auto;height:auto;background:none;font-weight:700}
+.st-abgelehnt{background:var(--red-bg);color:var(--red)} .st-abgelehnt::before{content:"✕";width:auto;height:auto;background:none;font-weight:700}
 .st-abg{background:#a9b1b9;color:#2e363d}
 .st-ank{background:#fff;color:#7b8792;border:1px dashed #b7c3cc}
 .st-dissens{background:var(--amber-bg);color:var(--amber)}
 .role{display:inline-block;font-size:.72rem;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap;background:#e9f2f8;color:var(--navy)}
-.role.gs{background:#efeafb;color:var(--violet)}
+.role.gs{background:#e3f0f8;color:var(--blue-d)}
 .role.sat{background:#fdf1dc;color:var(--amber)}
 .role.reg{background:#fde3e0;color:var(--red)}
 .pill{display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;border-radius:99px;padding:2px 9px;white-space:nowrap;letter-spacing:.02em}
@@ -448,6 +501,59 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
 .foot .r{margin-left:auto;display:flex;gap:28px;flex-wrap:wrap}
 .foot button{background:none;border:0;color:var(--ink-2);cursor:pointer;padding:0;text-align:left;font-size:.95rem}
 
+
+/* ---------- Einzelantrag: Schulen, Ausbildungsbetrieb, Fahrzeit ---------- */
+.schools{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-bottom:24px}
+.school{border-radius:8px;padding:16px 20px;background:#e9f2f8;border-left:5px solid var(--navy)}
+.school.gs{background:#e9f2f8;border-left-color:var(--blue)}
+.school .k{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--navy)}
+.school.gs .k{color:var(--navy)}
+.school .n{font-size:1.18rem;font-weight:600;color:var(--ink-2);margin-top:5px;line-height:1.3}
+.school .s{font-size:.82rem;color:var(--muted);margin-top:5px}
+.schools .arr{display:grid;place-items:center;color:var(--blue)}
+.schools .arr .icon{width:28px;height:28px}
+.subhd{font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);margin:26px 0 14px;padding-bottom:7px;border-bottom:1px dashed var(--line)}
+.chk{display:inline-flex;align-items:center;gap:7px;margin:0 16px 4px 0;font-size:.92rem}
+.chk .bx{width:16px;height:16px;border:1.5px solid #9aa7b1;border-radius:3px;display:grid;place-items:center;font-size:.68rem;font-weight:700;color:#fff;flex:none}
+.chk.on{font-weight:600;color:var(--ink)}
+.chk.on .bx{background:var(--blue-d);border-color:var(--blue-d)}
+.chk.off{color:var(--muted)}
+.docs.two{grid-template-columns:1fr 1fr}
+.fzgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fz{border:1px solid var(--line);border-radius:8px;padding:16px 18px;background:#f8fafc}
+.fz,.fz-legs>span{min-width:0}
+.fz-legs>span{overflow-wrap:anywhere}
+.fz-hd{display:flex;justify-content:space-between;gap:6px 12px;align-items:baseline;margin-bottom:12px;flex-wrap:wrap}
+.fz-hd b{color:var(--navy);font-size:1.02rem}
+.fz.gs .fz-hd b{color:var(--navy)}
+.fz-hd span{font-size:.8rem;color:var(--muted);text-align:right}
+.fz-t{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.fz-t>div{background:#fff;border:1px solid var(--line-2);border-radius:5px;padding:7px 11px}
+.fz-t .cap{margin:0 0 1px;font-size:.62rem}
+.fz-t .v{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-2);font-size:.95rem}
+.fz-legs{margin-top:14px;border-top:1px solid var(--line);padding-top:11px;display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;font-size:.84rem}
+.fz-legs .m{color:var(--blue-d);font-weight:600}
+.fz-legs .d{font-weight:600;text-align:right;white-space:nowrap}
+.fz-tot{display:flex;justify-content:space-between;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);font-weight:700;color:var(--navy);font-size:.92rem}
+.fz-cmp{margin-top:14px;display:flex;gap:10px;align-items:flex-start;background:#f3f6f8;border:1px solid var(--line);color:var(--ink-2);border-radius:6px;padding:11px 14px;font-size:.86rem}
+.fz-cmp .icon{color:var(--blue);margin-top:2px}
+/* ---------- Stellungnahme Sprengelschule (wie Formular) ---------- */
+.rq{color:#c0392b}
+.tscroll{overflow-x:auto}
+.ptbl2{width:100%;border-collapse:collapse;margin-top:2px;font-size:.86rem;min-width:560px}
+.ptbl2 th{background:var(--tbl-sub);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);font-weight:600;padding:8px 10px;text-align:left;border:1px solid var(--line);vertical-align:bottom;line-height:1.35}
+.ptbl2 td{border:1px solid var(--line);padding:6px 8px;vertical-align:middle;background:#fff}
+.ptbl2 .inp{padding:7px 9px}
+.ptbl2 .yn{display:flex;gap:16px}
+.ptbl2 .yn label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.ptbl2 .yn input{accent-color:var(--blue-d)}
+.wohnq{margin-top:22px;border:1px solid #cfe2ef;background:#e9f3fa;border-radius:8px;padding:14px 16px}
+.wohnq .q{display:flex;gap:10px;align-items:flex-start;font-weight:600;color:var(--navy);font-size:.95rem}
+.wohnq .q .icon{color:var(--blue);margin-top:2px;width:20px;height:20px}
+.wohnq .opts{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.wohnq .opts .rrow{flex:0 0 150px;background:#fff;margin:0}
+.wohnq .hint{font-size:.78rem;color:#6b4600;margin-top:9px}
+
 /* ---------- Responsive ---------- */
 @media (max-width:1060px){
   .kpis{grid-template-columns:1fr 1fr}
@@ -487,6 +593,14 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
   .tcard-hd .sp{display:none}
   .tbl tr{grid-template-columns:1fr;gap:10px;padding:14px 16px}
   .tfoot{padding:10px 16px}
+  .tbar,.chips{padding-left:16px;padding-right:16px}
+  .schools,.fzgrid,.docs.two{grid-template-columns:1fr}
+  .schools .arr{transform:rotate(90deg);padding:2px 0}
+  .srch{flex-basis:100%;max-width:none}
+  .fltwrap{margin-left:0}
+  .fltpop{right:auto;left:0}
+  .sjgrp>summary{padding:14px 16px}
+  .sjgrp .sjs{margin-left:0}
   .pager{justify-content:center}
   .dl,.dl.three,.lw,.lw.seq,.lw-row,.idgrid,.ezgrid,.agrid2{grid-template-columns:1fr}
   .acard{padding:20px 16px}
@@ -520,9 +634,9 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
   <h4>Screen</h4>
   <button class="pb" data-go="mail">Postfach / Push<small>Warum kommt die Person auf die Website?</small></button>
   <button class="pb" data-go="login">Anmeldung<small>entscheidet, welche Stelle arbeitet</small></button>
-  <button class="pb" data-go="dash">Antragsübersicht</button>
+  <button class="pb" data-go="dash" data-reset="1">Antragsübersicht</button>
   <button class="pb" data-go="case">Vorgang GS-2026-88421</button>
-  <button class="pb" data-go="archiv">Archiv</button>
+  <button class="pb" data-go="archiv" data-reset="1">Archiv</button>
   <h4>Laufweg-Modus</h4>
   <div class="seg">
     <button class="pb" data-mode="gestuft">Gestuft-parallel<small>Schulen, dann Träger</small></button>
@@ -551,6 +665,9 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
   <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><circle cx="12" cy="12" r="2"/><path d="M8.5 17a3.5 3.5 0 0 1 7 0"/></symbol>
   <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
   <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
   <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10h18L12 4Z"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
   <symbol id="i-arr" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></symbol>
@@ -618,7 +735,7 @@ var clock=0; function now(){ clock++; var m=12+clock; var h=9+Math.floor(m/60); 
    STAMMDATEN: STELLEN (Organisationskonten) & PERSONEN
    ============================================================ */
 var STN = {
-  sp:   {org:'Städtische Berufsschule I Augsburg', short:'Städt. BS I Augsburg', type:'Sprengelschule', rcls:'', task:'Entscheidungsempfehlung', person:'Thomas Schneider', anrede:'Herr Schneider', role:'Sachbearbeitung Gastschulwesen', via:'VIDIS / Landesportal', sig:'fort', frist:'30.09.2026', kind:'schule'},
+  sp:   {org:'Städtische Berufsschule I Augsburg', short:'Städt. BS I Augsburg', type:'Sprengelschule', rcls:'', task:'Stellungnahme', person:'Thomas Schneider', anrede:'Herr Schneider', role:'Sachbearbeitung Gastschulwesen', via:'VIDIS / Landesportal', sig:'fort', frist:'30.09.2026', kind:'schule'},
   spL:  {org:'Städtische Berufsschule I Augsburg', short:'Städt. BS I Augsburg', type:'Sprengelschule', rcls:'', task:'Entscheidung (Schulleitung)', person:'Dr. Claudia Hofmann', anrede:'Frau Dr. Hofmann', role:'Schulleitung', via:'VIDIS / Landesportal', sig:'fort', frist:'30.09.2026', kind:'schule'},
   gs:   {org:'Städt. Berufsschule für Informationstechnik München', short:'Städt. BS München', type:'Gastschule', rcls:'gs', task:'Stellungnahme (Aufnahme)', person:'Anna Huber', anrede:'Frau Huber', role:'Sachbearbeitung Schülerverwaltung', via:'VIDIS / Landesportal', sig:'fort', frist:'30.09.2026', kind:'schule'},
   satSp:{org:'Stadt Augsburg · Amt für Schulen', short:'Stadt Augsburg', type:'Sachaufwandsträger der Sprengelschule', rcls:'sat', task:'Einvernehmen (Gastschulbeitrag)', person:'Markus Weber', anrede:'Herr Weber', role:'Sachbearbeitung Schulfinanzierung', via:'Landesportal (Behördenkonto)', sig:'fort', frist:'07.10.2026', kind:'sat'},
@@ -639,12 +756,21 @@ function sigPill(k){ var s=SIG[k]; return '<span class="pill '+s.c+'">'+(k==='si
 /* Vorgang (Demo) */
 var CASE = {
   nr:'GS-2026-88421', eingang:'21. September 2026',
-  kind:{name:'Max Mustermann', pseudo:'S-7K3Q', geb:'14.03.2007', wohn:'Sonnenstraße 14, 85774 Unterföhring', gemeinde:'Unterföhring (Lkr. München)'},
+  kind:{name:'Max Mustermann', pseudo:'S-7K3Q', geb:'14.03.2007', wohn:'Sonnenstraße 14, 85774 Unterföhring', landkreis:'Landkreis München', gemeinde:'Unterföhring (Lkr. München)'},
   sorge:{name:'Max Mustermann', mail:'max.mustermann@beispiel.de', tel:'+49 176 5218 0473'},
-  betrieb:{name:'Bavaria Cloud Solutions GmbH', adr:'Gewerbepark D 12, 86153 Augsburg', vertr:'Ausbildungsleitung Sandra Keller'},
+  betrieb:{name:'Bavaria Cloud Solutions GmbH', adr:'Gewerbepark D 12, 86153 Augsburg', vertr:'Ausbildungsleitung Sandra Keller', strasse:'Gewerbepark D 12', plz:'86153', ort:'Augsburg', landkreis:'Kreisfreie Stadt Augsburg', ansprech:'Sandra Keller (Ausbildungsleitung)', tel:'+49 821 4567 120', fax:'+49 821 4567 199', mail:'ausbildung@bavaria-cloud.beispiel.de'},
+  besch:{ja:true, art:'mit Ausbildungsvertrag', fachklasse:'FIA 10b · Fachinformatiker/-in Anwendungsentwicklung, Jahrgangsstufe 10', fkSchule:'Städt. BS I Augsburg', bvj:false, bgj:false},
   beruf:'Fachinformatiker für Anwendungsentwicklung', ajahr:'1. Ausbildungsjahr (dual)', dauer:'01.09.2026 – 31.08.2029', schuljahr:'2026/2027',
   begrKat:'Fahrzeit / ÖPNV-Anbindung',
-  begr:'Um zur Berufsschule nach Augsburg zu kommen, muss ich drei verschiedene Busse nehmen. Der Unterricht beginnt um 8:00 Uhr und ich muss um 5:30 Uhr los. Zur Gastschule in München müsste ich nur einen Bus nehmen und erst um 7:15 Uhr los, um zum Unterrichtsbeginn um 7:45 Uhr da zu sein. Beim Rückweg habe ich dasselbe Problem.',
+  begr:'Um zur Berufsschule nach Augsburg zu kommen, muss ich mit S-Bahn, Zug und Bus fahren und zweimal umsteigen. Der Unterricht beginnt um 8:00 Uhr und ich muss schon um 5:30 Uhr los. Zur Gastschule in München brauche ich nur die S-Bahn und die Tram und kann erst um 7:10 Uhr los, um zum Unterrichtsbeginn um 8:15 Uhr da zu sein. Beim Rückweg habe ich dasselbe Problem: Aus Augsburg bin ich erst gegen 17:30 Uhr zu Hause.',
+  /* Angaben zur Fahrzeit (vom Antragsteller ausgefüllt, bei Begründung „Fahrzeit / ÖPNV-Anbindung“) */
+  fahrt:{
+    sp:{weg:'05:30', ab:'05:41', ankOrt:'07:05', ankSchule:'07:22', beginn:'08:00', ende:'15:15', rueck:'15:30', heim:'17:25', km:'ca. 80 km', kosten:'58,00 € (Deutschlandticket)',
+        legs:[['Fuß','Wohnung → Unterföhring Bahnhof','8 min'],['S-Bahn','Unterföhring → München Hbf','22 min'],['Bahn','München Hbf → Augsburg Hbf','40–45 min'],['Bus','Augsburg Hbf → Berufsschule','12–17 min']], total:'rund 1 h 50 min je Richtung'},
+    gs:{weg:'07:10', ab:'07:21', ankOrt:'07:43', ankSchule:'07:58', beginn:'08:15', ende:'15:15', rueck:'15:25', heim:'16:15', km:'ca. 18 km', kosten:'58,00 € (Deutschlandticket)',
+        legs:[['Fuß','Wohnung → Unterföhring Bahnhof','8 min'],['S-Bahn','Unterföhring → München Hbf','22 min'],['U-Bahn / Tram','München Hbf → Berufsschule','15 min']], total:'rund 50 min je Richtung'},
+    cmp:'Weggang 1 h 40 min später, rund 1 h kürzere Fahrzeit je Richtung, zu Hause 1 h 10 min früher.'
+  },
   docs:[
     {n:'IHK_Ausbildungsvertrag_Mustermann_2026.pdf', m:'1,4 MB · Signiert durch IHK Schwaben (08.09.2026)', see:['sp','spL','gs','reg']},
     {n:'OEPNV_Fahrzeitennachweis_MVV_AVV.pdf', m:'620 KB · Automatisch erzeugter Wegezeit-Report', see:['sp','spL','gs','satSp','satGs','reg']},
@@ -659,28 +785,82 @@ var VORLAGEN = {
   reg:['Die Ablehnung wird bestätigt. Ein wichtiger Grund im Sinne des Art. 43 Abs. 5 BayEUG liegt nicht vor.','Das fehlende Einvernehmen wird ersetzt. Die nachgewiesene Fahrzeitersparnis und die gesundheitliche Situation begründen einen wichtigen Grund.']
 };
 
-/* Weitere Vorgänge je Persona (statisch) */
+/* Weitere Vorgänge je Persona (statisch, fiktiv)
+   sj  = Schuljahr, für das das Gastschulverhältnis beantragt wurde
+   dn  = Dauer des Gastschulverhältnisses in Schuljahren
+   st  = neu | bearb | pruef | genehmigt | abgelehnt
+   bei = Stelle, bei der der Vorgang gerade liegt (sp, spL, gs, gsL, satSp, satGs, reg)
+   ent = Datum des Bescheids (nur abgeschlossene Vorgänge) */
 var ROWS = {
   sp:[
-    {n:'Sophie Bauer', az:'GS-2026-88435', b:'Elektroniker/-in', bs:'Fachrichtung Betriebstechnik', von:'Staatl. BS I Regensburg', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'—', st:'neu'},
-    {n:'Lukas Weber', az:'GS-2026-88390', b:'Kfm. für Digitalisierungsmanagement', bs:'2. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Staatl. BS I Nürnberg', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'weiter'},
-    {n:'Elena Schmidt', az:'GS-2026-88210', b:'Kfz-Mechatronikerin', bs:'Schwerpunkt System- und Hochvolttechnik', von:'Staatl. BS I Ingolstadt', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'abg'},
-    {n:'Jonas Keller', az:'GS-2026-88477', b:'Mechatroniker/-in', bs:'1. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Staatl. BS Fürstenfeldbruck', me:'von', rolle:'Sprengelschule', zu:'—', st:'neu'},
-    {n:'Leonie Frank', az:'GS-2026-88402', b:'Industriekauffrau', bs:'2. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'bearb'},
-    {n:'Paul Richter', az:'GS-2026-88366', b:'Anlagenmechaniker SHK', bs:'3. Ausbildungsjahr', von:'Staatl. BS Donauwörth', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'weiter'},
-    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'abg'}
+    /* laufend */
+    {n:'Sophie Bauer', az:'GS-2026-88435', b:'Elektroniker/-in', bs:'Fachrichtung Betriebstechnik', sj:'2026/2027', dn:3, von:'Staatl. BS I Regensburg', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'—', st:'neu', bei:'gs'},
+    {n:'Lukas Weber', az:'GS-2026-88390', b:'Kfm. für Digitalisierungsmanagement', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Staatl. BS I Nürnberg', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'bearb', bei:'satSp'},
+    {n:'Jonas Keller', az:'GS-2026-88477', b:'Mechatroniker/-in', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:4, von:'Städt. BS I Augsburg', nach:'Staatl. BS Fürstenfeldbruck', me:'von', rolle:'Sprengelschule', zu:'—', st:'neu', bei:'sp'},
+    {n:'Leonie Frank', az:'GS-2026-88402', b:'Industriekauffrau', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'bearb', bei:'sp'},
+    {n:'Paul Richter', az:'GS-2026-88366', b:'Anlagenmechaniker SHK', bs:'3. Ausbildungsjahr', sj:'2026/2027', dn:1, von:'Staatl. BS Donauwörth', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'bearb', bei:'sp'},
+    {n:'Hannah Vogel', az:'GS-2026-88412', b:'Elektronikerin für Gebäudesystemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'pruef', bei:'spL'},
+    {n:'Felix Braun', az:'GS-2026-88441', b:'Kaufmann im Einzelhandel', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Günzburg', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Sabine Maurer', st:'bearb', bei:'gs'},
+    {n:'Emre Yılmaz', az:'GS-2026-88459', b:'Fachkraft für Lagerlogistik', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'bearb', bei:'gs'},
+    {n:'Clara Neumann', az:'GS-2026-88380', b:'Bankkauffrau', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Staatl. BS Dillingen', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Sabine Maurer', st:'bearb', bei:'satGs'},
+    {n:'Finn Wagner', az:'GS-2026-88463', b:'Zerspanungsmechaniker', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:4, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Sprengelschule', zu:'Sabine Maurer', st:'bearb', bei:'sp'},
+    /* abgeschlossen – Schuljahr 2026/2027 */
+    {n:'Elena Schmidt', az:'GS-2026-88210', b:'Kfz-Mechatronikerin', bs:'Schwerpunkt System- und Hochvolttechnik', sj:'2026/2027', dn:4, von:'Staatl. BS I Ingolstadt', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'genehmigt', ent:'02.09.2026'},
+    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'abgelehnt', ent:'28.08.2026'},
+    {n:'Noah Fischer', az:'GS-2026-88105', b:'Fachinformatiker Systemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'genehmigt', ent:'19.08.2026'},
+    {n:'Ella Schuster', az:'GS-2026-88152', b:'Elektronikerin für Geräte und Systeme', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Staatl. BS Memmingen', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Sabine Maurer', st:'genehmigt', ent:'24.08.2026'},
+    /* abgeschlossen – Schuljahr 2025/2026 */
+    {n:'Laura Hoffmann', az:'GS-2025-71422', b:'Hotelfachfrau', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Altötting', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'genehmigt', ent:'21.08.2025'},
+    {n:'Maximilian Schäfer', az:'GS-2025-71388', b:'Zimmerer', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Staatl. BS Mindelheim', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'abgelehnt', ent:'07.08.2025'},
+    {n:'Anna Lehmann', az:'GS-2025-71501', b:'Steuerfachangestellte', bs:'2. Ausbildungsjahr', sj:'2025/2026', dn:2, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Sprengelschule', zu:'Sabine Maurer', st:'genehmigt', ent:'12.09.2025'},
+    {n:'David Krause', az:'GS-2025-71275', b:'Elektroniker für Betriebstechnik', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:4, von:'Staatl. BS Neuburg a. d. Donau', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Sabine Maurer', st:'genehmigt', ent:'29.07.2025'},
+    {n:'Sarah Meyer', az:'GS-2025-71610', b:'Fachinformatikerin Anwendungsentwicklung', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'abgelehnt', ent:'03.10.2025'},
+    {n:'Luca Becker', az:'GS-2025-71344', b:'Mechatroniker', bs:'3. Ausbildungsjahr', sj:'2025/2026', dn:1, von:'Staatl. BS Lauingen', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'genehmigt', ent:'05.08.2025'},
+    /* abgeschlossen – Schuljahr 2024/2025 */
+    {n:'Tobias Schulz', az:'GS-2024-60218', b:'Mechatroniker', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:4, von:'Staatl. BS Donauwörth', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Thomas Schneider', st:'genehmigt', ent:'15.08.2024'},
+    {n:'Lea Zimmermann', az:'GS-2024-60177', b:'Kauffrau für Büromanagement', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'genehmigt', ent:'02.08.2024'},
+    {n:'Moritz König', az:'GS-2024-60344', b:'Maler und Lackierer', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Memmingen', me:'von', rolle:'Sprengelschule', zu:'Thomas Schneider', st:'abgelehnt', ent:'11.09.2024'},
+    {n:'Johanna Wolf', az:'GS-2024-60231', b:'Industriekauffrau', bs:'2. Ausbildungsjahr', sj:'2024/2025', dn:2, von:'Staatl. BS Dillingen', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Sabine Maurer', st:'genehmigt', ent:'20.08.2024'},
+    /* abgeschlossen – Schuljahr 2023/2024 */
+    {n:'Julia Huber', az:'GS-2023-50112', b:'Industriemechanikerin', bs:'1. Ausbildungsjahr', sj:'2023/2024', dn:4, von:'Staatl. BS Günzburg', nach:'Städt. BS I Augsburg', me:'nach', rolle:'Gastschule', zu:'Petra Klein', st:'genehmigt', ent:'24.08.2023'},
+    {n:'Fabian Lang', az:'GS-2023-50096', b:'Kfz-Mechatroniker', bs:'1. Ausbildungsjahr', sj:'2023/2024', dn:4, von:'Städt. BS I Augsburg', nach:'Staatl. BS Landsberg am Lech', me:'von', rolle:'Sprengelschule', zu:'Petra Klein', st:'genehmigt', ent:'10.08.2023'},
+    {n:'Marie Schmitt', az:'GS-2023-50140', b:'Fachkraft für Lagerlogistik', bs:'1. Ausbildungsjahr', sj:'2023/2024', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Sprengelschule', zu:'Petra Klein', st:'abgelehnt', ent:'30.08.2023'}
   ],
   gs:[
-    {n:'Ben Hartmann', az:'GS-2026-88455', b:'Fachinformatiker Systemintegration', bs:'1. Ausbildungsjahr', von:'Staatl. BS Landshut', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'bearb'},
-    {n:'Lina Wolf', az:'GS-2026-88301', b:'IT-Systemelektronikerin', bs:'2. Ausbildungsjahr', von:'Städt. BS München', nach:'Staatl. BS Erding', me:'von', rolle:'Sprengelschule', zu:'Anna Huber', st:'abg'}
+    {n:'Ben Hartmann', az:'GS-2026-88455', b:'Fachinformatiker Systemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Landshut', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'bearb', bei:'gs'},
+    {n:'Lisa Brandt', az:'GS-2026-88468', b:'Mediengestalterin Digital und Print', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Freising', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'—', st:'neu', bei:'gs'},
+    {n:'Kevin Roth', az:'GS-2026-88397', b:'Kaufmann für IT-System-Management', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS München', nach:'Staatl. BS Dachau', me:'von', rolle:'Sprengelschule', zu:'Anna Huber', st:'bearb', bei:'satSp'},
+    {n:'Nina Albrecht', az:'GS-2026-88426', b:'Fachinformatikerin Daten- und Prozessanalyse', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Rosenheim', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Murat Demir', st:'bearb', bei:'sp'},
+    {n:'Lina Wolf', az:'GS-2026-88301', b:'IT-Systemelektronikerin', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS München', nach:'Staatl. BS Erding', me:'von', rolle:'Sprengelschule', zu:'Anna Huber', st:'genehmigt', ent:'26.08.2026'},
+    {n:'Noah Fischer', az:'GS-2026-88105', b:'Fachinformatiker Systemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'genehmigt', ent:'19.08.2026'},
+    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'abgelehnt', ent:'28.08.2026'},
+    {n:'Jan Peters', az:'GS-2025-71330', b:'Fachinformatiker Anwendungsentwicklung', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Staatl. BS Erding', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'genehmigt', ent:'18.08.2025'},
+    {n:'Selin Kaya', az:'GS-2025-71455', b:'Kauffrau im E-Commerce', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Staatl. BS Ebersberg', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Murat Demir', st:'abgelehnt', ent:'09.09.2025'},
+    {n:'Sarah Meyer', az:'GS-2025-71610', b:'Fachinformatikerin Anwendungsentwicklung', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'abgelehnt', ent:'03.10.2025'},
+    {n:'Florian Winter', az:'GS-2024-60290', b:'Elektroniker für Informations- und Systemtechnik', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:4, von:'Staatl. BS Traunstein', nach:'Städt. BS München', me:'nach', rolle:'Gastschule', zu:'Anna Huber', st:'genehmigt', ent:'13.08.2024'}
   ],
   satSp:[
-    {n:'Lukas Weber', az:'GS-2026-88390', b:'Kfm. für Digitalisierungsmanagement', bs:'2. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Staatl. BS I Nürnberg', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'bearb'},
-    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'abg'}
+    {n:'Lukas Weber', az:'GS-2026-88390', b:'Kfm. für Digitalisierungsmanagement', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Staatl. BS I Nürnberg', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'bearb', bei:'satSp'},
+    {n:'Emre Yılmaz', az:'GS-2026-88459', b:'Fachkraft für Lagerlogistik', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Träger Sprengelschule', zu:'—', st:'bearb', bei:'gs'},
+    {n:'Hannah Vogel', az:'GS-2026-88412', b:'Elektronikerin für Gebäudesystemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Träger Sprengelschule', zu:'—', st:'pruef', bei:'spL'},
+    {n:'Finn Wagner', az:'GS-2026-88463', b:'Zerspanungsmechaniker', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:4, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Träger Sprengelschule', zu:'—', st:'bearb', bei:'sp'},
+    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'abgelehnt', ent:'28.08.2026'},
+    {n:'Noah Fischer', az:'GS-2026-88105', b:'Fachinformatiker Systemintegration', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'genehmigt', ent:'19.08.2026'},
+    {n:'Sarah Meyer', az:'GS-2025-71610', b:'Fachinformatikerin Anwendungsentwicklung', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'abgelehnt', ent:'03.10.2025'},
+    {n:'Anna Lehmann', az:'GS-2025-71501', b:'Steuerfachangestellte', bs:'2. Ausbildungsjahr', sj:'2025/2026', dn:2, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'genehmigt', ent:'12.09.2025'},
+    {n:'Laura Hoffmann', az:'GS-2025-71422', b:'Hotelfachfrau', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Altötting', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'genehmigt', ent:'21.08.2025'},
+    {n:'Lea Zimmermann', az:'GS-2024-60177', b:'Kauffrau für Büromanagement', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Kaufbeuren', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'genehmigt', ent:'02.08.2024'},
+    {n:'Moritz König', az:'GS-2024-60344', b:'Maler und Lackierer', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Memmingen', me:'von', rolle:'Träger Sprengelschule', zu:'Markus Weber', st:'abgelehnt', ent:'11.09.2024'}
   ],
   reg:[
-    {n:'Jana Seidl', az:'GS-2026-87990', b:'Zahnmedizinische Fachangestellte', bs:'1. Ausbildungsjahr', von:'Staatl. BS Memmingen', nach:'Staatl. BS Ulm (BW)', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'bearb'},
-    {n:'Tim Berger', az:'GS-2026-87812', b:'Koch', bs:'2. Ausbildungsjahr', von:'Staatl. BS Lindau', nach:'Staatl. BS Kempten', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abg'}
+    {n:'Jana Seidl', az:'GS-2026-87990', b:'Zahnmedizinische Fachangestellte', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Memmingen', nach:'Staatl. BS Ulm (BW)', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'bearb', bei:'reg'},
+    {n:'Leon Hofer', az:'GS-2026-88350', b:'Fachkraft für Veranstaltungstechnik', bs:'1. Ausbildungsjahr', sj:'2026/2027', dn:3, von:'Staatl. BS Neu-Ulm', nach:'Städt. BS München', me:'von', rolle:'Regierung Sprengelschule', zu:'—', st:'neu', bei:'reg'},
+    {n:'Tim Berger', az:'GS-2026-87812', b:'Koch', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Staatl. BS Lindau', nach:'Staatl. BS Kempten', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'genehmigt', ent:'31.08.2026'},
+    {n:'Mia Kraus', az:'GS-2026-88198', b:'Elektronikerin Energie- und Gebäudetechnik', bs:'2. Ausbildungsjahr', sj:'2026/2027', dn:2, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abgelehnt', ent:'28.08.2026'},
+    {n:'Sarah Meyer', az:'GS-2025-71610', b:'Fachinformatikerin Anwendungsentwicklung', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abgelehnt', ent:'03.10.2025'},
+    {n:'Maximilian Schäfer', az:'GS-2025-71388', b:'Zimmerer', bs:'1. Ausbildungsjahr', sj:'2025/2026', dn:3, von:'Staatl. BS Mindelheim', nach:'Städt. BS I Augsburg', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abgelehnt', ent:'07.08.2025'},
+    {n:'Moritz König', az:'GS-2024-60344', b:'Maler und Lackierer', bs:'1. Ausbildungsjahr', sj:'2024/2025', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Memmingen', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abgelehnt', ent:'11.09.2024'},
+    {n:'Marie Schmitt', az:'GS-2023-50140', b:'Fachkraft für Lagerlogistik', bs:'1. Ausbildungsjahr', sj:'2023/2024', dn:3, von:'Städt. BS I Augsburg', nach:'Staatl. BS Neu-Ulm', me:'von', rolle:'Regierung Sprengelschule', zu:'Dr. Nadine Krüger', st:'abgelehnt', ent:'30.08.2023'}
   ],
   satGs:[]
 };
@@ -696,7 +876,7 @@ function freshState(){
   ORDER.concat(['reg','spL']).forEach(function(k){ st[k]={status:'wartet', votum:null, begr:'', at:null, sig:null, who:null, form:{}, seen:false, kenntnis:false}; });
   st.sp.seen=true; st.sp.notified=true;
   return {persona:'sp', screen:'mail', loggedIn:false, session:null, mailMode:'mail', mailSel:null, deeplink:null, login:freshLogin('sp'), linkOpened:false, mode:'gestuft', pseudo:'sat', upgraded:false, kpi:'alle', stations:st, bescheid:null, phase:'umlauf', linkIssued:false,
-    inbox:{sp:[{t:'Neuer Vorgang zugewiesen: GS-2026-88421', d:'21.09.2026 · Aufgabe: Entscheidungsempfehlung', go:'case', type:'zuweisung', at:'21.09.2026, 14:15'}], spL:[], gs:[], satSp:[], satGs:[], reg:[], azubi:[{t:'Eingangsbestätigung GS-2026-88421', d:'21.09.2026 · BayernPortal-Postfach', go:'case', type:'eingang', at:'21.09.2026, 14:12'}]},
+    inbox:{sp:[{t:'Neuer Vorgang zugewiesen: GS-2026-88421', d:'21.09.2026 · Aufgabe: Stellungnahme', go:'case', type:'zuweisung', at:'21.09.2026, 14:15'}], spL:[], gs:[], satSp:[], satGs:[], reg:[], azubi:[{t:'Eingangsbestätigung GS-2026-88421', d:'21.09.2026 · BayernPortal-Postfach', go:'case', type:'eingang', at:'21.09.2026, 14:12'}]},
     log:[
       {t:'21.09.2026, 14:15', ev:'Vorgang zugewiesen an Thomas Schneider', org:'Städt. BS I Augsburg', who:'System', role:'Zuteilungsregel „Fachinformatik"', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'},
       {t:'21.09.2026, 14:13', ev:'Laufweg angelegt: 4 Pflichtstellen, Regierung von Schwaben bei Dissens', org:'—', who:'System', role:'Zuständigkeitsfinder', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'},
@@ -759,10 +939,10 @@ function renderHeader(){
        '<nav class="nav"><span class="pill sig-einf" style="font-size:.76rem;padding:5px 12px">'+ico('i-link','12px')+' Link gültig bis 07.10.2026 · kein Konto</span><button class="logout" data-logout="1">Link schließen</button></nav>';
   } else {
     var unread=S.inbox[k].length-(readCount[k]||0);
-    h+='<button class="brand" data-go="dash"><svg><use href="#wappen"/></svg><span><span class="t1">Gastschulverwaltung Berufsschule</span><span class="t2">Freistaat Bayern</span></span></button>'+
+    h+='<button class="brand" data-go="dash" data-reset="1"><svg><use href="#wappen"/></svg><span><span class="t1">Gastschulverwaltung Berufsschule</span><span class="t2">Freistaat Bayern</span></span></button>'+
       '<nav class="nav">'+
-        '<button class="nl'+(S.screen==='dash'?' on':'')+'" data-go="dash">Antragsübersicht</button>'+
-        '<button class="nl'+(S.screen==='archiv'?' on':'')+'" data-go="archiv">Archiv</button>'+
+        '<button class="nl'+(S.screen==='dash'?' on':'')+'" data-go="dash" data-reset="1">Antragsübersicht</button>'+
+        '<button class="nl'+(S.screen==='archiv'?' on':'')+'" data-go="archiv" data-reset="1">Archiv</button>'+
         '<span style="position:relative"><button class="bellbtn" id="bellBtn">Nachrichten '+ico('i-bell')+(unread>0?'<span class="cnt">'+unread+'</span>':'')+'</button><div class="inbox" id="inbox" hidden></div></span>'+
         '<span class="user"><span class="nmx">'+esc(STN[k].person)+'</span><span class="av">'+ico('i-user')+'</span><button class="logout" data-logout="1">Abmelden</button></span>'+
       '</nav>';
@@ -788,67 +968,258 @@ function renderFooter(){
 /* ============================================================
    ANTRAGSÜBERSICHT / ARCHIV
    ============================================================ */
-var ST_LBL={neu:'Neue', bearb:'In Bearbeitung', weiter:'Weitergeleitet', abg:'Abgeschlossen', ank:'Angekündigt'};
 var ROLE_LBL={sp:'Sprengelschule', spL:'Sprengelschule', gs:'Gastschule', satSp:'Träger Sprengelschule', satGs:'Träger Gastschule', reg:'Regierung Sprengelschule'};
-var sortNew=true;
+/* Rolle im Vorgang -> Stelle */
+var RO_KEY={'Sprengelschule':'sp', 'Gastschule':'gs', 'Träger Sprengelschule':'satSp', 'Träger Gastschule':'satGs', 'Regierung Sprengelschule':'reg'};
+/* Wo liegt der Vorgang gerade? (für "In Bearbeitung bei …" / "In Prüfung bei …") */
+var LOC_LBL={sp:'Sprengelschule', spL:'Schulleitung Sprengelschule', gs:'Gastschule', gsL:'Schulleitung Gastschule', satSp:'Sachaufwandsträger', satGs:'Sachaufwandsträger', reg:'Regierung'};
+var LOC_TIP={sp:'bei der Sachbearbeitung der Sprengelschule', spL:'zur Entscheidung bei der Schulleitung der Sprengelschule', gs:'bei der Gastschule', gsL:'zur Entscheidung bei der Schulleitung der Gastschule', satSp:'beim Sachaufwandsträger der Sprengelschule', satGs:'beim Sachaufwandsträger der Gastschule', reg:'bei der Regierung (fehlendes Einvernehmen)'};
+var CLOSED={genehmigt:true, abgelehnt:true};
+var SORT_LBL={neu:'Neueste zuerst', alt:'Älteste zuerst', az:'Name A–Z (Nachname)', za:'Name Z–A (Nachname)'};
+var KPI_LBL={neu:'Status: Neue Eingänge', mine:'Status: In meiner Verantwortung', andere:'Status: Bei anderen Stellen'};
+
+function stLabel(r){
+  if(r.st==='neu') return 'Neue';
+  if(r.st==='pruef') return 'In Prüfung bei '+LOC_LBL[r.bei];
+  if(r.st==='bearb') return 'In Bearbeitung bei '+LOC_LBL[r.bei];
+  if(r.st==='genehmigt') return 'Genehmigt';
+  if(r.st==='abgelehnt') return 'Abgelehnt';
+  return r.st;
+}
+/* Eigene Stelle im jeweiligen Vorgang (Schulleitung = Stelle + "L") */
+function myStn(k,r){ var ro=RO_KEY[r.rolle]||k; return k==='spL' ? ro+'L' : ro; }
+function isMine(k,r){ return r.st==='neu' || r.bei===myStn(k,r); }
+function sjShort(y){ var e=String((y+1)%100); return y+'/'+(e.length<2?'0'+e:e); }
+function dauerHtml(r){
+  var y=parseInt(r.sj,10), n=r.dn||1;
+  return '<div class="dauer"><b>'+n+' '+(n===1?'Schuljahr':'Schuljahre')+'</b><div class="sub">'+(n===1?'nur '+sjShort(y):sjShort(y)+' – '+sjShort(y+n-1))+'</div></div>';
+}
+
+/* Demo-Vorgang: Status aus dem tatsächlichen Laufweg ableiten */
+function demoLoc(){
+  var s=S.stations;
+  if(S.phase==='bescheid') return [issuer()];
+  if(S.phase==='regierung') return ['reg'];
+  var l=[];
+  if(s.spL.status==='offen') l.push('spL'); else if(s.sp.status==='offen') l.push('sp');
+  ['gs','satSp','satGs'].forEach(function(x){ if(s[x].status==='offen') l.push(x); });
+  return l;
+}
 function demoRow(k){
-  var st=S.stations[k].status, s;
-  if(S.bescheid) s='abg';
-  else if(k==='reg' && (st==='bedingt'||st==='entfaellt')) return null;
-  else if(st==='offen') s=S.stations[k].seen?'bearb':'neu';
-  else if(st==='wartet') s='ank';
-  else s='weiter';
-  var zu = (s==='neu' && k!=='sp') ? '—' : (STN[k].delegated&&!S.upgraded ? 'Signatur-Link' : STN[k].person);
-  return {demo:true, n:kidName(k), az:CASE.nr, b:'Fachinformatiker (AE)', bs:CASE.ajahr, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:(k==='sp'||k==='spL'||k==='satSp'||k==='reg')?'von':'nach', rolle:ROLE_LBL[k], zu:zu, st:s};
+  var s=S.stations[k], st, bei;
+  if(S.bescheid) st=S.bescheid.entsch;
+  else if(k==='reg' && (s.status==='bedingt'||s.status==='entfaellt')) return null;
+  else {
+    var loc=demoLoc();
+    if(loc.indexOf(k)>=0){ bei=k; st = k==='spL' ? 'pruef' : (s.status==='offen'&&!s.seen ? 'neu' : 'bearb'); }
+    else { bei=loc[0]||k; st = bei==='spL' ? 'pruef' : 'bearb'; }
+  }
+  var zu = (st==='neu' && k!=='sp') ? '—' : (STN[k].delegated&&!S.upgraded ? 'Signatur-Link' : STN[k].person);
+  if(k==='spL' && bei && bei!=='spL') zu=STN.sp.person; /* liegt noch bei der Sachbearbeitung */
+  return {demo:true, n:kidName(k), az:CASE.nr, b:'Fachinformatiker (AE)', bs:CASE.ajahr, sj:CASE.schuljahr, dn:3, von:'Städt. BS I Augsburg', nach:'Städt. BS München', me:(k==='sp'||k==='spL'||k==='satSp'||k==='reg')?'von':'nach', rolle:ROLE_LBL[k], zu:zu, st:st, bei:bei, ent:S.bescheid&&S.bescheid.at?S.bescheid.at.split(',')[0]:''};
 }
 function rowsFor(k){ var r=(ROWS[k]||[]).slice(); var d=demoRow(k); if(d) r.unshift(d); return r; }
 function roleCls(r){ return /Gastschule$/.test(r)&&!/Träger/.test(r)?'gs':/Träger/.test(r)?'sat':/Regierung/.test(r)?'reg':''; }
+
+/* ---------- Ansichtszustand: Suche, Filter, Sortierung (getrennt für Übersicht und Archiv) ---------- */
+function freshView(){ return {q:'', sort:'neu', side:'alle'}; }
+function V(archiv){ if(!S.lv) S.lv={dash:freshView(), archiv:freshView()}; return S.lv[archiv?'archiv':'dash']; }
+function resetView(which){
+  V(false);
+  if(!which||which==='dash'){ S.lv.dash=freshView(); S.kpi='alle'; }
+  if(!which||which==='archiv'){ S.lv.archiv=freshView(); S.sjOpen=null; }
+  S.fltOpen=false;
+}
+function sideLbl(x){
+  if(x==='alle') return 'Alle Vorgänge';
+  var pre = STN[S.persona]&&STN[S.persona].kind==='sat' ? 'Nur Träger ' : 'Nur ';
+  return pre+(x==='sp'?'Sprengelschule':'Gastschule');
+}
+function sideOf(r){ var ro=RO_KEY[r.rolle]; return (ro==='gs'||ro==='satGs')?'gs':'sp'; }
+function lastName(n){ var p=String(n).trim().split(/\s+/); return p[p.length-1]; }
+function qWords(v){ return (v.q||'').trim().toLowerCase().split(/\s+/).filter(Boolean); }
+function rowText(r){ return [r.n,r.az,r.b,r.bs,r.von,r.nach,r.rolle,r.zu,r.sj,stLabel(r)].join(' ').toLowerCase(); }
+function kpiMatch(k,r){
+  if(S.kpi==='neu') return r.st==='neu';
+  if(S.kpi==='mine') return r.st!=='neu' && isMine(k,r);
+  if(S.kpi==='andere') return !isMine(k,r);
+  return true;
+}
+function listRows(k,archiv){
+  var v=V(archiv), all=rowsFor(k), ws=qWords(v);
+  var pool=all.filter(function(r){ return archiv ? !!CLOSED[r.st] : !CLOSED[r.st]; });
+  var rows=pool.filter(function(r){
+    if(!archiv && !kpiMatch(k,r)) return false;
+    if(v.side!=='alle' && sideOf(r)!==v.side) return false;
+    if(ws.length){ var t=rowText(r); return ws.every(function(w){ return t.indexOf(w)>=0; }); }
+    return true;
+  });
+  rows.sort(function(a,b){
+    if(v.sort==='az'||v.sort==='za'){ var c=lastName(a.n).localeCompare(lastName(b.n),'de')||a.n.localeCompare(b.n,'de'); return v.sort==='az'?c:-c; }
+    var d=a.az<b.az?-1:a.az>b.az?1:0; return v.sort==='alt'?d:-d;
+  });
+  return {rows:rows, total:pool.length};
+}
+function cntTxt(d){ return d.rows.length===d.total ? '('+d.total+' gesamt)' : '('+d.rows.length+' von '+d.total+')'; }
+function hl(t,ws){
+  var e=esc(t);
+  (ws||[]).forEach(function(w){ var we=esc(w).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); e=e.replace(new RegExp('('+we+')(?![^<]*>)','gi'),'<mark>$1</mark>'); });
+  return e;
+}
+
+/* ---------- Tabellenbausteine ---------- */
+function thead(archiv){
+  return '<thead><tr><th>Antragsteller /<br>Aktenzeichen</th><th>Ausbildungsberuf</th><th>Dauer des<br>Gastschul&shy;verhält&shy;nisses</th><th>Gewünschter<br>Wechsel</th><th>Zuständigkeit</th><th>'+(archiv?'Entscheidung':'Aktueller<br>Bearbeitungsstatus')+'</th></tr></thead>';
+}
+function stCell(k,r){
+  var closed=!!CLOSED[r.st], mine=isMine(k,r), other=!closed && r.st!=='neu' && !mine;
+  var tip = closed ? 'Bescheid vom '+r.ent : r.st==='neu' ? 'Neu eingegangen' : mine ? 'Liegt bei Ihrer Stelle' : 'Liegt derzeit '+LOC_TIP[r.bei];
+  return '<span class="st st-'+r.st+(other?' other':'')+'" title="'+esc(tip)+'">'+esc(stLabel(r))+'</span>'+(closed&&r.ent?'<div class="sub">Bescheid vom '+esc(r.ent)+'</div>':'');
+}
+function rowHtml(k,r,ws){
+  return '<tr data-demo="'+(r.demo?1:0)+'"><td><div class="nm">'+hl(r.n,ws)+'</div><div class="az">'+hl(r.az,ws)+'</div></td>'+
+    '<td data-l="Ausbildungsberuf"><div>'+hl(r.b,ws)+'</div><div class="sub">'+hl(r.bs,ws)+'</div></td>'+
+    '<td data-l="Dauer des Gastschulverhältnisses">'+dauerHtml(r)+'</td>'+
+    '<td data-l="Gewünschter Wechsel"><div class="wx"><span class="'+(r.me==='von'?'me':'')+'">'+ico('i-bank')+'<span>'+hl(r.von,ws)+'</span></span><span class="'+(r.me==='nach'?'me':'')+'">'+ico('i-arr')+'<span>'+hl(r.nach,ws)+'</span></span></div></td>'+
+    '<td data-l="Zuständigkeit" style="font-weight:500;font-size:1.02rem">'+hl(r.zu,ws)+'</td>'+
+    '<td data-l="'+(CLOSED[r.st]?'Entscheidung':'Bearbeitungsstatus')+'">'+stCell(k,r)+'</td></tr>';
+}
+function emptyMsg(archiv){
+  var v=V(archiv), filtered=qWords(v).length||v.side!=='alle'||(!archiv&&S.kpi!=='alle');
+  return filtered ? 'Keine Vorgänge zu Ihrer Suche bzw. Filterauswahl. <button class="clrall" data-reset-list="1">Filter zurücksetzen</button>'
+                  : (archiv?'Noch keine abgeschlossenen Vorgänge.':'Keine offenen Vorgänge.');
+}
+function listHtml(k,archiv,d){
+  var v=V(archiv), ws=qWords(v);
+  if(!archiv){
+    return '<div class="tblwrap"><table class="tbl">'+thead(false)+'<tbody>'+
+      (d.rows.length ? d.rows.map(function(r){ return rowHtml(k,r,ws); }).join('') : '<tr><td colspan="6" class="empty-list">'+emptyMsg(false)+'</td></tr>')+
+      '</tbody></table></div><div class="tfoot"><span>Zeige '+(d.rows.length?1:0)+' – '+d.rows.length+' von '+d.rows.length+' Anträgen</span><span>Einträge pro Seite: 25</span></div>'+
+      '<div class="pager"><button disabled>‹</button><button class="on">1</button><button disabled>›</button></div>';
+  }
+  /* Archiv: gruppiert nach Schuljahr, aufklappbar */
+  if(!d.rows.length) return '<div class="empty-list">'+emptyMsg(true)+'</div>';
+  var groups={}, order=[], filtering=ws.length||v.side!=='alle';
+  d.rows.forEach(function(r){ if(!groups[r.sj]){ groups[r.sj]=[]; order.push(r.sj); } groups[r.sj].push(r); });
+  order.sort().reverse();
+  var h='<div class="sjtools"><button class="btn-link" data-sjall="1">Alle aufklappen</button><button class="btn-link" data-sjall="0">Alle zuklappen</button></div>';
+  order.forEach(function(sj,i){
+    var list=groups[sj], g=list.filter(function(r){ return r.st==='genehmigt'; }).length, a=list.length-g;
+    var open = filtering ? true : (S.sjOpen && (sj in S.sjOpen) ? S.sjOpen[sj] : i===0);
+    h+='<details class="sjgrp" data-sj="'+sj+'"'+(open?' open':'')+'><summary>'+ico('i-chev').replace('class="icon"','class="icon chev"')+
+      '<span class="sjt">Schuljahr '+sj+'</span>'+(sj===CASE.schuljahr?'<span class="curp">laufend</span>':'')+
+      '<span class="sjc">'+list.length+(list.length===1?' Vorgang':' Vorgänge')+'</span>'+
+      '<span class="sjs">'+(g?'<span class="st st-genehmigt">'+g+' genehmigt</span>':'')+(a?'<span class="st st-abgelehnt">'+a+' abgelehnt</span>':'')+'</span></summary>'+
+      '<div class="tblwrap"><table class="tbl">'+thead(true)+'<tbody>'+list.map(function(r){ return rowHtml(k,r,ws); }).join('')+'</tbody></table></div></details>';
+  });
+  return h+'<div class="tfoot"><span>'+d.rows.length+' abgeschlossene Vorgänge in '+order.length+(order.length===1?' Schuljahr':' Schuljahren')+'</span><span>Neueste Schuljahre zuerst</span></div>';
+}
+function toolbarHtml(archiv){
+  var v=V(archiv), n=(v.side!=='alle'?1:0)+(v.sort!=='neu'?1:0);
+  var h='<div class="tbar"><div class="srch">'+ico('i-search')+
+    '<input type="text" id="srchIn" autocomplete="off" aria-label="Vorgänge durchsuchen" placeholder="'+(archiv?'Archiv durchsuchen: Name, Aktenzeichen, Schule, Beruf, Schuljahr …':'Suche nach Name, Aktenzeichen, Schule, Ausbildungsberuf …')+'" value="'+esc(v.q)+'">'+
+    '<button class="clr" id="srchClr" title="Suche leeren" aria-label="Suche leeren"'+(v.q?'':' hidden')+'>'+ico('i-x','15px')+'</button></div>'+
+    '<div class="fltwrap"><button class="btn-filter'+(n||S.fltOpen?' on':'')+'" id="btnFilter" aria-expanded="'+(S.fltOpen?'true':'false')+'">'+ico('i-filter')+' Filter &amp; Sortierung'+(n?' <span class="n">'+n+'</span>':'')+'</button>';
+  if(S.fltOpen){
+    h+='<div class="fltpop" id="fltPop"><h5>Sortierung</h5>'+
+      ['neu','alt','az','za'].map(function(x){ return '<label><input type="radio" name="fsort" value="'+x+'"'+(v.sort===x?' checked':'')+'> '+SORT_LBL[x]+'</label>'; }).join('')+
+      '<h5>Unsere Rolle im Vorgang</h5>'+
+      ['alle','sp','gs'].map(function(x){ return '<label><input type="radio" name="fside" value="'+x+'"'+(v.side===x?' checked':'')+'> '+sideLbl(x)+'</label>'; }).join('')+
+      '<div class="ft"><button data-fltreset="1">Zurücksetzen</button><button data-fltclose="1">Fertig</button></div></div>';
+  }
+  return h+'</div></div>';
+}
+function chipsHtml(archiv){
+  var v=V(archiv), c=[];
+  if(!archiv && S.kpi!=='alle' && KPI_LBL[S.kpi]) c.push(['kpi',KPI_LBL[S.kpi]]);
+  if(v.q.trim()) c.push(['q','Suche: „'+v.q.trim()+'“']);
+  if(v.side!=='alle') c.push(['side','Rolle: '+sideLbl(v.side)]);
+  if(v.sort!=='neu') c.push(['sort','Sortierung: '+SORT_LBL[v.sort]]);
+  if(!c.length) return '';
+  return '<div class="chips"><span>Aktive Filter:</span>'+c.map(function(x){ return '<button class="chip-f" data-chip="'+x[0]+'" title="Filter entfernen">'+esc(x[1])+ico('i-x')+'</button>'; }).join('')+
+    '<button class="clrall" data-reset-list="1">'+(archiv?'Alle Filter zurücksetzen':'Alle zurücksetzen – gesamte Antragsübersicht anzeigen')+'</button></div>';
+}
+
+/* ============================================================
+   ANTRAGSÜBERSICHT / ARCHIV – Ansicht
+   ============================================================ */
 function viewDash(archiv){
   var k=S.persona, all=rowsFor(k), p=STN[k];
-  var c={neu:0,bearb:0,weiter:0,abg:0};
-  all.forEach(function(r){ if(r.st==='ank') c.weiter++; else c[r.st]++; });
-  var rows=all.filter(function(r){
-    if(archiv) return r.st==='abg';
-    if(S.kpi==='alle') return true;
-    if(S.kpi==='weiter') return r.st==='weiter'||r.st==='ank';
-    return r.st===S.kpi;
-  });
-  rows.sort(function(a,b){ return sortNew ? (b.az>a.az?1:-1) : (a.az>b.az?1:-1); });
+  var open=all.filter(function(r){ return !CLOSED[r.st]; }), closed=all.filter(function(r){ return !!CLOSED[r.st]; });
+  var c={neu:0, mine:0, andere:0};
+  open.forEach(function(r){ if(r.st==='neu') c.neu++; else if(isMine(k,r)) c.mine++; else c.andere++; });
   var demoClosedUnread = S.bescheid && !S.stations[k].kenntnis;
   var h='<div class="page"><div class="orgline">'+esc(p.org)+'</div><h1 class="hello">'+(archiv?'Archiv':'Guten Tag, '+esc(p.anrede))+'</h1>';
   if(!archiv){
     h+='<div class="kpis">'+
       kpi('neu','Neue Eingänge','i-clip',c.neu,'Anträge','')+
-      kpi('bearb','In Bearbeitung','i-hour',c.bearb,'in meiner Verantwortung','')+
-      kpi('weiter','Weitergeleitet','i-badge',c.weiter,'in Abstimmung','')+
-      kpi('abg','Abgeschlossen','i-mail',c.abg,demoClosedUnread?'1 ungelesen':'im Archiv',demoClosedUnread?'<span class="kt green">Neu eingegangen</span>':'')+
+      kpi('mine','In Bearbeitung','i-hour',c.mine,'in meiner Verantwortung','')+
+      kpi('andere','Bei anderen Stellen','i-badge',c.andere,'in Abstimmung','')+
+      kpi('abg','Abgeschlossen','i-mail',closed.length,demoClosedUnread?'1 ungelesen':'im Archiv',demoClosedUnread?'<span class="kt green">Neu eingegangen</span>':'')+
     '</div>';
   }
-  h+='<div class="tcard"><div class="tcard-hd"><h2>'+ico('i-folder')+(archiv?'Abgeschlossene Vorgänge':'Antragsübersicht')+' ('+rows.length+(S.kpi!=='alle'&&!archiv?' von '+all.length:' gesamt')+')</h2>'+
-     '<span class="sp"></span><button class="btn-filter" id="btnSort">'+ico('i-filter')+' Filter: '+(sortNew?'Neuste zuerst':'Älteste zuerst')+'</button>'+
-     '<button class="btn-link" data-t="refresh">'+ico('i-refresh','15px')+' Aktualisieren</button></div>'+
-     '<div class="tblwrap"><table class="tbl"><thead><tr><th>Antragsteller /<br>Aktenzeichen</th><th>Ausbildungsberuf</th><th>Gewünschter<br>Wechsel</th><th>Unsere Rolle</th><th>Zuständigkeit</th><th>Aktueller<br>Bearbeitungsstatus</th></tr></thead><tbody>';
-  h+= rows.length ? rows.map(function(r){
-    return '<tr data-demo="'+(r.demo?1:0)+'"><td><div class="nm">'+esc(r.n)+'</div><div class="az">'+r.az+'</div></td>'+
-      '<td data-l="Ausbildungsberuf"><div>'+esc(r.b)+'</div><div class="sub">'+esc(r.bs)+'</div></td>'+
-      '<td data-l="Gewünschter Wechsel"><div class="wx"><span class="'+(r.me==='von'?'me':'')+'">'+ico('i-bank')+esc(r.von)+'</span><span class="'+(r.me==='nach'?'me':'')+'">'+ico('i-arr')+esc(r.nach)+'</span></div></td>'+
-      '<td data-l="Unsere Rolle"><span class="role '+roleCls(r.rolle)+'">'+esc(r.rolle)+'</span></td>'+
-      '<td data-l="Zuständigkeit" style="font-weight:500;font-size:1.02rem">'+esc(r.zu)+'</td>'+
-      '<td data-l="Bearbeitungsstatus"><span class="st st-'+r.st+'">'+ST_LBL[r.st]+'</span></td></tr>';
-  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:34px">Keine Vorgänge in dieser Auswahl.</td></tr>';
-  h+='</tbody></table></div><div class="tfoot"><span>Zeige 1 – '+rows.length+' von '+rows.length+' Anträgen</span><span>Einträge pro Seite: 8</span></div>'+
-     '<div class="pager"><button disabled>‹</button><button class="on">1</button><button disabled>›</button></div></div>';
-  if(!archiv) h+='<p class="muted" style="font-size:.82rem;margin-top:14px">Dieselbe Organisation ist je Vorgang in einer anderen Rolle beteiligt – die Rolle ergibt sich aus Sprengel- und Gastschuldaten des Antrags, nicht aus dem Benutzerkonto. Fett markiert: Ihre Stelle.</p>';
+  var d=listRows(k,archiv);
+  h+='<div class="tcard"><div class="tcard-hd"><h2>'+ico('i-folder')+(archiv?'Abgeschlossene Vorgänge':'Antragsübersicht')+' <span id="listCnt">'+cntTxt(d)+'</span></h2>'+
+     '<span class="sp"></span><button class="btn-link" data-t="refresh">'+ico('i-refresh','15px')+' Aktualisieren</button></div>'+
+     toolbarHtml(archiv)+'<div id="chipHost">'+chipsHtml(archiv)+'</div><div id="listHost">'+listHtml(k,archiv,d)+'</div></div>';
+  if(!archiv) h+='<p class="muted" style="font-size:.82rem;margin-top:14px">Fett markiert unter „Gewünschter Wechsel“: Ihre Seite im Vorgang – oben die Sprengelschule, unten die Gastschule. Farbiger Status: Der Vorgang liegt bei Ihrer Stelle; grauer Status: Er liegt derzeit bei einer anderen Stelle. Abgeschlossene Vorgänge finden Sie im Archiv.</p>';
+  else h+='<p class="muted" style="font-size:.82rem;margin-top:14px">Abgeschlossene Vorgänge (genehmigt oder abgelehnt) erscheinen nicht mehr in der Antragsübersicht. Sie sind hier nach dem Schuljahr gruppiert, für das das Gastschulverhältnis beantragt wurde.</p>';
   h+='</div>';
   $('#mainHost').innerHTML=h;
-  $$('.kpi').forEach(function(el){ el.addEventListener('click',function(){ S.kpi = (S.kpi===el.dataset.kpi)?'alle':el.dataset.kpi; render(); }); });
-  var bs=$('#btnSort'); if(bs) bs.addEventListener('click',function(){ sortNew=!sortNew; render(); });
-  $$('.tbl tbody tr').forEach(function(tr){ tr.addEventListener('click',function(){
-    if(tr.dataset.demo==='1') go('case'); else toast('Im Prototyp ist nur der Vorgang GS-2026-88421 vollständig ausgearbeitet.');
-  }); });
+  bindDash(archiv);
 }
 function kpi(key,l,ic,n,sub,tag){
   return '<button class="kpi'+(S.kpi===key?' on':'')+'" data-kpi="'+key+'">'+tag+'<span class="kl">'+l+'</span>'+ico(ic,'','') .replace('class="icon"','class="icon ki"')+'<span class="kn"><b>'+n+'</b><span>'+sub+'</span></span></button>';
+}
+/* Nur die Liste neu zeichnen – das Suchfeld behält beim Tippen den Fokus */
+function refreshList(archiv){
+  var k=S.persona, d=listRows(k,archiv);
+  $('#listHost').innerHTML=listHtml(k,archiv,d);
+  $('#listCnt').textContent=cntTxt(d);
+  $('#chipHost').innerHTML=chipsHtml(archiv);
+  var clr=$('#srchClr'); if(clr) clr.hidden=!V(archiv).q;
+  bindList();
+}
+function bindList(){
+  $$('#listHost .tbl tbody tr').forEach(function(tr){ if(tr.querySelector('.empty-list')) return; tr.addEventListener('click',function(){
+    if(tr.dataset.demo==='1') go('case'); else toast('Im Prototyp ist nur der Vorgang GS-2026-88421 vollständig ausgearbeitet.');
+  }); });
+  $$('#listHost details.sjgrp').forEach(function(dt){ dt.addEventListener('toggle',function(){ if(!S.sjOpen) S.sjOpen={}; S.sjOpen[dt.dataset.sj]=dt.open; }); });
+  $$('#listHost [data-sjall]').forEach(function(b){ b.addEventListener('click',function(){
+    var o=b.dataset.sjall==='1'; S.sjOpen={};
+    $$('#listHost details.sjgrp').forEach(function(dt){ dt.open=o; S.sjOpen[dt.dataset.sj]=o; });
+  }); });
+}
+var dashEvBound=false;
+function bindDash(archiv){
+  var si=$('#srchIn');
+  if(si){
+    si.addEventListener('input',function(){ V(archiv).q=si.value; refreshList(archiv); });
+    si.addEventListener('keydown',function(e){ if(e.key==='Escape' && si.value){ si.value=''; V(archiv).q=''; refreshList(archiv); } });
+  }
+  var sc=$('#srchClr'); if(sc) sc.addEventListener('click',function(){ V(archiv).q=''; if(si){ si.value=''; si.focus(); } refreshList(archiv); });
+  $$('.kpi').forEach(function(el){ el.addEventListener('click',function(){
+    if(el.dataset.kpi==='abg'){ resetView('archiv'); go('archiv'); return; }
+    S.kpi=(S.kpi===el.dataset.kpi)?'alle':el.dataset.kpi; render(true);
+  }); });
+  bindList();
+  if(!dashEvBound){ dashEvBound=true; installDashEvents(); }
+}
+function installDashEvents(){
+  document.addEventListener('click',function(e){
+    if(S.screen!=='dash' && S.screen!=='archiv') return;
+    var arch=S.screen==='archiv', v=V(arch), t;
+    if(e.target.closest('#btnFilter')){ S.fltOpen=!S.fltOpen; render(true); return; }
+    if(e.target.closest('[data-fltclose]')){ S.fltOpen=false; render(true); return; }
+    if(e.target.closest('[data-fltreset]')){ v.sort='neu'; v.side='alle'; render(true); return; }
+    if((t=e.target.closest('[data-chip]'))){ var c=t.dataset.chip; if(c==='kpi') S.kpi='alle'; else if(c==='q') v.q=''; else if(c==='side') v.side='alle'; else if(c==='sort') v.sort='neu'; render(true); return; }
+    if(e.target.closest('[data-reset-list]')){ resetView(arch?'archiv':'dash'); render(true); return; }
+    if(S.fltOpen && document.contains(e.target) && !e.target.closest('#fltPop')){ S.fltOpen=false; render(true); }
+  });
+  document.addEventListener('change',function(e){
+    var t=e.target; if(t.name!=='fsort' && t.name!=='fside') return;
+    var v=V(S.screen==='archiv'); if(t.name==='fsort') v.sort=t.value; else v.side=t.value; render(true);
+  });
 }
 
 /* ============================================================
@@ -906,7 +1277,7 @@ function cardTitle(){
   if(S.bescheid) task = s.kenntnis||S.bescheid.k===k ? 'erledigt' : 'Kenntnisnahme des Bescheids';
   else if(S.phase==='bescheid' && issuer()===k) task='Bescheid erlassen';
   else if(k==='sp' && s.empf && !done('sp')) task='Empfehlung abgegeben – wartet auf Entscheidung der Schulleitung';
-  else if(k==='spL' && s.status==='wartet') task='wartet auf die Entscheidungsempfehlung der Sachbearbeitung';
+  else if(k==='spL' && s.status==='wartet') task='wartet auf die Stellungnahme der Sachbearbeitung';
   else if(s.status==='offen') task=STN[k].task;
   else if(s.status==='wartet') task='angekündigt – beginnt nach '+(S.mode==='seq'?'vorheriger Stelle':'Stufe 1');
   else task='abgegeben – wartet auf weitere Stellen';
@@ -945,31 +1316,59 @@ function docList(k){
     return '<div class="doc"><span class="fi">PDF</span><div><div class="n">'+esc(d.n)+'</div><div class="m">'+esc(d.m)+'</div></div><span class="sp"></span><button class="eye" data-doc="'+i+'" aria-label="Ansehen">'+ico('i-eye')+'</button></div>';
   }).join('')+'</div>';
 }
+function chk(on,label){ return '<span class="chk'+(on?' on':' off')+'"><span class="bx">'+(on?'✓':'')+'</span>'+label+'</span>'; }
+function fzPanel(key){
+  var d=CASE.fahrt[key], gs=key==='gs';
+  var T=[['Weggang Wohnung',d.weg],['Abfahrt um',d.ab],['Ankunft Schulort',d.ankOrt],['Ankunft Schule',d.ankSchule],['Unterrichtsbeginn',d.beginn],['Unterrichtsende',d.ende],['Abfahrt Bus/Bahn',d.rueck],['Ankunft Wohnung',d.heim],['Kilometer (einfach)',d.km],['Fahrtkosten pro Monat',d.kosten]];
+  return '<div class="fz'+(gs?' gs':'')+'"><div class="fz-hd"><b>'+(gs?'Gastschule':'Sprengelschule')+'</b><span>'+esc(STN[key].org)+'</span></div>'+
+    '<div class="fz-t">'+T.map(function(x){ return '<div><div class="cap">'+x[0]+'</div><div class="v">'+esc(x[1])+'</div></div>'; }).join('')+'</div>'+
+    '<div class="fz-legs">'+d.legs.map(function(l){ return '<span class="m">'+esc(l[0])+'</span><span>'+esc(l[1])+'</span><span class="d">'+esc(l[2])+'</span>'; }).join('')+'</div>'+
+    '<div class="fz-tot"><span>Gesamtfahrzeit</span><span>'+esc(d.total)+'</span></div></div>';
+}
 function cardAntrag(k){
-  var c=CASE, ps=pseudoFor(k), nf='<span class="muted">nicht freigegeben</span>';
+  var c=CASE, ps=pseudoFor(k), nf='<span class="muted">nicht freigegeben</span>', bt=c.betrieb, be=c.besch;
   function f(cap,val){ return '<div><div class="cap">'+cap+'</div><div class="val">'+val+'</div></div>'; }
   var adr=c.kind.wohn.split(', ');
+  var fahrzeit=/Fahrzeit/.test(c.begrKat) && c.fahrt;
   return '<div class="card acard">'+
     '<h1 class="atitle">Gastschulantrag #'+c.nr+'</h1>'+
     '<div class="ameta">'+f('Eingangsdatum','<b>'+c.eingang+'</b>')+f('Schuljahr','<b>'+c.schuljahr+'</b>')+f('Wechsel','<b>Städt. BS I Augsburg → Städt. BS München</b>')+'</div>'+
+    /* 1. Antragstellende Person */
     '<div class="asec"><div class="asec-hd">'+ico('i-user')+'Angaben zur antragstellenden Person</div>'+
       (ps?'<div class="pseudo">'+ico('i-mask','18px')+'<span><b>Pseudonymisiert für Ihre Stelle.</b> Sie sehen die für Ihre Erklärung erforderlichen Angaben. Klarname, Geburtsdatum und Kontakt sind nicht freigegeben.</span></div>':'')+
       '<div class="dl">'+
         f('Name, Vorname','<b>'+esc(kidName(k))+'</b>')+f('E-Mail',ps?nf:esc(c.sorge.mail))+
         f('Geburtsdatum',ps?nf:c.kind.geb)+f('Tel.-Nummer',ps?nf:esc(c.sorge.tel))+
-        f('Adresse',ps?esc(c.kind.gemeinde):esc(adr[0])+'<br>'+esc(adr.slice(1).join(', ')))+
+        f('Adresse',ps?esc(c.kind.gemeinde):esc(adr[0])+'<br>'+esc(adr.slice(1).join(', '))+'<br>'+esc(c.kind.landkreis))+
       '</div></div>'+
+    /* 2. Beschäftigungs- bzw. Ausbildungsverhältnis (wie Formular) */
     '<div class="asec"><div class="asec-hd">'+ico('i-badge')+'Beschäftigungs- bzw. Ausbildungsverhältnis</div>'+
+      '<div class="schools">'+
+        '<div class="school"><div class="k">Sprengelschule</div><div class="n">'+esc(STN.sp.org)+'</div><div class="s">ermittelt über den Betriebssitz ('+esc(bt.plz+' '+bt.ort)+')</div></div>'+
+        '<div class="arr">'+ico('i-arr')+'</div>'+
+        '<div class="school gs"><div class="k">Gewünschte Gastschule</div><div class="n">'+esc(STN.gs.org)+'</div><div class="s">beantragt ab Schuljahr '+esc(c.schuljahr)+'</div></div>'+
+      '</div>'+
       '<div class="dl">'+
-        f('Sprengel-Zugehörigkeit','<b>Städt. BS I Augsburg</b> <span class="muted">(über Betriebssitz)</span>')+f('Gewünschte Gastschule','<b>Städt. BS München</b>')+
-        f('Ausbildungsberuf · Dauer der Ausbildung','<b>'+esc(c.beruf)+'</b><br>'+esc(c.dauer))+f('Ausbildungsbetrieb','<b>'+esc(c.betrieb.name)+'</b><br>'+esc(c.betrieb.adr))+
+        f('Beschäftigungsverhältnis',chk(be.ja,'Ja')+chk(!be.ja,'Nein'))+
+        f('Art des Beschäftigungsverhältnisses',chk(be.art==='mit Ausbildungsvertrag','mit Ausbildungsvertrag')+chk(be.art==='ohne Ausbildungsvertrag','ohne Ausbildungsvertrag')+chk(be.art==='Umschüler','Umschüler'))+
+        f('Dauer der Ausbildung (von – bis)','<b>'+esc(c.dauer)+'</b>')+f('Ausbildungsberuf','<b>'+esc(c.beruf)+'</b>')+
+        f('Derzeitiger Besuch · Fachklasse',esc(be.fachklasse)+'<br><span class="muted">'+esc(be.fkSchule)+'</span>')+f('BVJ / BGJ',chk(be.bvj,'BVJ')+chk(be.bgj,'BGJ'))+
+      '</div>'+
+      '<div class="subhd">Beschäftigungs- / Ausbildungsbetrieb</div>'+
+      '<div class="dl">'+
+        f('Name','<b>'+esc(bt.name)+'</b>')+f('E-Mail','<a href="#" data-t="link" style="color:var(--blue-d)">'+esc(bt.mail)+'</a>')+
+        f('Ansprechpartner:in',esc(bt.ansprech))+f('Tel.-Nummer',esc(bt.tel))+
+        f('Adresse',esc(bt.strasse)+'<br>'+esc(bt.plz+' '+bt.ort)+'<br>'+esc(bt.landkreis))+f('Fax',esc(bt.fax))+
       '</div></div>'+
-    '<div class="asec agrid2">'+
-      '<div><div class="asec-hd">'+ico('i-quote')+'Begründung des Antrags</div>'+
-        f('Angegebene Begründung','<b>'+esc(c.begrKat)+'</b>')+
-        '<div class="qbox"><div class="qmeta"><b>Freitext des Antragstellers</b><span>Eingereicht am 21.09.2026</span></div><div class="quote">„'+esc(c.begr)+'"</div></div></div>'+
-      '<div><div class="asec-hd">'+ico('i-paper')+'Eingereichte Nachweise &amp; Anlagen</div>'+docList(k)+'</div>'+
-    '</div></div>'+
+    /* 3. Begründung – inkl. Fahrzeitangaben */
+    '<div class="asec"><div class="asec-hd">'+ico('i-quote')+'Begründung des Antrags</div>'+
+      f('Angegebene Begründung','<b>'+esc(c.begrKat)+'</b>')+
+      '<div class="qbox"><div class="qmeta"><b>Freitext des Antragstellers</b><span>Eingereicht am 21.09.2026</span></div><div class="quote">„'+esc(c.begr)+'"</div></div>'+
+      (fahrzeit ? '<div class="subhd">Angaben zur Fahrzeit · vom Antragsteller ausgefüllt</div><div class="fzgrid">'+fzPanel('sp')+fzPanel('gs')+'</div>'+
+        '<div class="fz-cmp">'+ico('i-clock')+'<span><b>Vergleich (aus den Angaben berechnet):</b> '+esc(c.fahrt.cmp)+'</span></div>' : '')+
+    '</div>'+
+    '<div class="asec"><div class="asec-hd">'+ico('i-paper')+'Eingereichte Nachweise &amp; Anlagen</div>'+docList(k).replace('class="docs"','class="docs two"')+'</div>'+
+    '</div>'+
     '<div class="rqbar"><button class="btn btn-rq" data-open="ovRueck">'+ico('i-help','15px')+' Rückfrage</button></div>';
 }
 function cardStellungnahmen(){
@@ -978,7 +1377,7 @@ function cardStellungnahmen(){
   if(!items.length) return h+'<p class="muted" style="margin:0">Noch keine Stellungnahme abgegeben.</p></div>';
   h+='<div class="stlist">'+items.map(function(k){
     var s=S.stations[k], yes=s.status==='zugestimmt', f=s.form, facts='';
-    if(k==='sp') facts='<span>Besucht derzeit: <b>'+(f.besucht||'Sprengelschule')+'</b></span><span>Beschulung: <b>'+(f.ort||'am Schulsitz')+'</b></span><span>Form: <b>'+(f.bform||'Einzeltage')+'</b></span>'+(f.tag1?'<span>Schultage: <b>'+f.tag1+(f.tag2&&f.tag2!=='—'?', '+f.tag2:'')+'</b></span>':'');
+    if(k==='sp') facts=spFacts(f);
     if(k==='gs') facts='<span>Fachklasse: <b>'+(f.fk||'vorhanden')+'</b></span><span>Kapazität: <b>'+(f.kap||'vorhanden')+'</b></span><span>Form: <b>'+(f.bform||'Teilzeit (Einzeltage)')+'</b></span><span>Unterbringung: <b>'+(f.unt||'nicht erforderlich')+'</b></span>';
     if(k==='satSp') facts='<span>Gastschulbeitrag: <b>'+(f.kosten||'Übernahme zugesagt')+'</b></span>';
     if(k==='satGs') facts='<span>Aufnahme: <b>'+(f.aufn||'zugestimmt')+'</b></span>';
@@ -1016,6 +1415,32 @@ function ezGrid(f){
     '<span class="rl">Unterrichtszeiten</span>'+
     '<input class="inp" data-f="z1" placeholder="z. B. 08:00–15:15" value="'+esc(f.z1||'')+'"><input class="inp" data-f="z14" placeholder="—" value="'+esc(f.z14||'')+'"><input class="inp" data-f="z2" placeholder="—" value="'+esc(f.z2||'')+'"></div>';
 }
+function yn(name,cur){ return '<span class="yn"><label><input type="radio" name="'+name+'" value="ja"'+(cur==='ja'?' checked':'')+'> Ja</label><label><input type="radio" name="'+name+'" value="nein"'+(cur==='nein'?' checked':'')+'> Nein</label></span>'; }
+/* Stellungnahme der Sprengelschule – aufgebaut wie das Antragsformular (Abschnitt 1. Sprengelschule) */
+function spForm(f){
+  var ez=f.bform!=='block';
+  var h='<span class="fl">Sprengelschule</span>'+rr('ort','am Schulsitz','Beschulung am Schulsitz',f.ort||'am Schulsitz',1)+rr('ort','an Außenstelle','Beschulung an Außenstelle',f.ort,1)+
+    '<span class="fl">Beschulungsform</span>'+rr('bform','einzel','a) Beschulung im Einzeltag',ez?'einzel':'block',1)+rr('bform','block','b) Blockbeschulung',ez?'einzel':'block',1);
+  if(ez){
+    h+='<span class="fl">a) Beschulung im Einzeltag</span><div class="tscroll"><table class="ptbl2"><thead>'+
+      '<tr><th rowspan="2" style="width:20%">Jahrgangsstufe</th><th>1 Schultag / Woche</th><th>Weiterer Unterrichtstag alle 14 Tage</th><th>2 Schultage / Woche</th></tr>'+
+      '<tr><th colspan="3" style="text-align:center">Unterrichtszeiten</th></tr></thead><tbody>'+
+      [1,2].map(function(i){
+        return '<tr><td>'+sel('ez'+i+'jg',['—','10','11','12','13'],f['ez'+i+'jg']||(i===1?'10':'—'))+'</td>'+
+          ['a','b','c'].map(function(c){ var id='ez'+i+c; return '<td><input class="inp" data-f="'+id+'" placeholder="'+(i===1&&c==='a'?'z. B. Di 08:00–15:15':'—')+'" value="'+esc(f[id]||'')+'"></td>'; }).join('')+'</tr>';
+      }).join('')+'</tbody></table></div>';
+  } else {
+    h+='<span class="fl">b) Blockbeschulung</span><div class="tscroll"><table class="ptbl2"><thead><tr><th>Unterrichtszeiten</th><th style="width:16%">Wochen im Schuljahr</th><th style="width:20%">Heimunterbringung</th><th style="width:20%">Vollzeitbeschulung</th></tr></thead><tbody>'+
+      [1,2].map(function(i){
+        return '<tr><td><input class="inp" data-f="bl'+i+'z" placeholder="'+(i===1?'z. B. Mo–Fr 08:00–15:15':'—')+'" value="'+esc(f['bl'+i+'z']||'')+'"></td>'+
+          '<td><input class="inp" data-f="bl'+i+'w" placeholder="'+(i===1?'z. B. 12':'—')+'" value="'+esc(f['bl'+i+'w']||'')+'"></td>'+
+          '<td>'+yn('bl'+i+'h',f['bl'+i+'h'])+'</td><td>'+yn('bl'+i+'v',f['bl'+i+'v'])+'</td></tr>';
+      }).join('')+'</tbody></table></div>';
+  }
+  h+='<div class="wohnq"><div class="q">'+ico('i-home')+'<span>Wohnheim bereits am Sonntag geöffnet und Busverbindung Bahnhof – Wohnheim gegeben?</span></div>'+
+     '<div class="opts">'+rr('wohnheim','ja','Ja',f.wohnheim)+rr('wohnheim','nein','Nein',f.wohnheim)+'</div></div>';
+  return h;
+}
 function reqSig(k,yes){ if(STN[k].kind==='sat') return yes?'einf':'fort'; return 'fort'; }
 function sigBox(k){
   var f=S.stations[k].form, yes=f.votum==='ja', have=curSig(k), need=f.votum?reqSig(k,yes):null;
@@ -1031,15 +1456,15 @@ function sigBox(k){
 }
 function votumBlock(k){
   var f=S.stations[k].form, kind=STN[k].kind, neg=f.votum==='nein', len=(f.begr||'').length;
-  var opts = kind==='sat' ? ['Einvernehmen erteilen','Einvernehmen versagen'] : kind==='reg' ? ['Antrag genehmigen (fehlendes Einvernehmen ersetzen)','Antrag ablehnen (Ablehnung bestätigen)'] : k==='sp' ? ['Befürwortung empfehlen','Ablehnung empfehlen'] : ['Antrag befürworten (Zustimmung)','Antrag ablehnen'];
-  var needBegr = neg || kind==='reg' || k==='spL';
+  var opts = kind==='sat' ? ['Einvernehmen erteilen','Einvernehmen versagen'] : kind==='reg' ? ['Antrag genehmigen (fehlendes Einvernehmen ersetzen)','Antrag ablehnen (Ablehnung bestätigen)'] : k==='sp' ? ['Zustimmung empfehlen','Ablehnung empfehlen'] : k==='spL' ? ['Antrag zustimmen','Antrag ablehnen'] : ['Antrag befürworten (Zustimmung)','Antrag ablehnen'];
+  var needBegr = neg || kind==='reg';
   var h='<span class="fl">'+(kind==='reg'?'Entscheidung der Regierung':k==='sp'?'Empfehlung an die Schulleitung':k==='spL'?'Entscheidung der Schulleitung':'Entscheidung dieser Stelle')+'</span>'+
     rr('votum','ja',opts[0],f.votum)+rr('votum','nein',opts[1],f.votum)+
     '<div class="begr-hd"><label for="begr">'+(neg&&k!=='spL'?'Begründung der Versagung':kind==='reg'||k==='spL'?'Begründung der Entscheidung':'Anmerkung (optional)')+(needBegr?' <span class="rq">*</span>':'')+'</label>'+
     '<select class="inp" id="vorlage"><option value="">Vorlage wählen …</option>'+VORLAGEN[kind==='reg'?'reg':kind==='sat'?'sat':'schule'].map(function(v,i){return '<option value="'+i+'">'+esc(v.slice(0,58))+(v.length>58?' …':'')+'</option>';}).join('')+'</select></div>'+
     '<textarea class="inp" id="begr" maxlength="2000" placeholder="Sach- und Rechtslage verbindlich begründen …">'+esc(f.begr||'')+'</textarea>'+
     '<div class="cnt-row"><span class="'+(needBegr&&len<30?'err':'ok')+'" id="begrHint">'+(needBegr?(len<30?'Mindestens 30 Zeichen erforderlich':'Begründung ausreichend'):'Optional – wird der Akte beigefügt')+'</span><span id="begrCnt">'+len+' / 2.000</span></div>'+
-    sigBox(k);
+    (k==='sp'||k==='spL' ? '' : sigBox(k));
   return h;
 }
 function nextHint(k){
@@ -1052,30 +1477,36 @@ function nextHint(k){
 }
 function canSubmit(k){
   var f=S.stations[k].form; if(!f.votum) return false;
-  var yes=f.votum==='ja', needBegr=!yes||STN[k].kind==='reg'||k==='spL';
+  var yes=f.votum==='ja', needBegr=!yes||STN[k].kind==='reg';
   if(needBegr && (f.begr||'').trim().length<30) return false;
   return SIG[curSig(k)].n>=SIG[reqSig(k,yes)].n;
 }
-/* Empfehlung der Sachbearbeitung (Sprengelschule) – Grundlage für die Schulleitung */
+function spFacts(f){
+  f=f||{}; var ez=f.bform!=='block', t=[];
+  t.push('<span>Beschulung: <b>'+esc(f.ort||'am Schulsitz')+'</b></span>');
+  t.push('<span>Form: <b>'+(ez?'Einzeltag':'Blockbeschulung')+'</b></span>');
+  if(ez){ var z=[f.ez1a&&'1 Schultag/Woche '+f.ez1a, f.ez1b&&'alle 14 Tage '+f.ez1b, f.ez1c&&'2 Schultage/Woche '+f.ez1c].filter(Boolean); if(z.length) t.push('<span>Jgst. '+esc(f.ez1jg&&f.ez1jg!=='—'?f.ez1jg:'10')+': <b>'+esc(z.join(' · '))+'</b></span>'); }
+  else if(f.bl1z||f.bl1w) t.push('<span>Block: <b>'+esc([f.bl1z, f.bl1w&&(f.bl1w+' Wochen')].filter(Boolean).join(' · '))+'</b></span>');
+  t.push('<span>Wohnheim sonntags geöffnet / Busverbindung: <b>'+(f.wohnheim==='ja'?'Ja':f.wohnheim==='nein'?'Nein':'keine Angabe')+'</b></span>');
+  return t.join('');
+}
+/* Stellungnahme der Sachbearbeitung (Sprengelschule) – Grundlage für die Schulleitung */
 function empfBox(){
   var e=S.stations.sp.empf; if(!e) return '';
   var f=e.form||{};
-  var facts='<span>Besucht derzeit: <b>'+esc(f.besucht||'Sprengelschule')+'</b></span><span>Beschulung: <b>'+esc(f.ort||'am Schulsitz')+'</b></span><span>Form: <b>'+esc(f.bform||'Einzeltage')+'</b></span>'+(f.tag1&&f.tag1!=='—'?'<span>Schultage: <b>'+esc(f.tag1)+(f.tag2&&f.tag2!=='—'?', '+esc(f.tag2):'')+'</b></span>':'');
-  return '<div class="stitem" style="margin-bottom:14px"><div class="h"><b>Empfehlung der Sachbearbeitung</b><span class="sp" style="margin-left:auto"></span><span class="vote '+(e.yes?'ok':'no')+'">'+ico(e.yes?'i-check':'i-x','13px')+' '+(e.yes?'Befürwortung empfohlen':'Ablehnung empfohlen')+'</span></div>'+
+  var facts=spFacts(f);
+  return '<div class="stitem" style="margin-bottom:14px"><div class="h"><b>Stellungnahme der Sachbearbeitung</b><span class="sp" style="margin-left:auto"></span><span class="vote '+(e.yes?'ok':'no')+'">'+ico(e.yes?'i-check':'i-x','13px')+' '+(e.yes?'Zustimmung empfohlen':'Ablehnung empfohlen')+'</span></div>'+
     '<div class="facts">'+facts+'</div>'+
-    (e.begr?'<div class="b">'+esc(e.begr)+'</div>':'')+
-    '<div class="sg"><span class="lvl" title="'+LVL[2]+'">2</span> '+esc(e.who)+' · '+esc(e.role)+' · '+esc(e.at)+'</div></div>';
+    (e.begr?'<div class="b">'+esc(e.begr)+'</div>':'')+'</div>';
 }
 function cardTask(k){
   var s=S.stations[k], f=s.form, kind=STN[k].kind, h;
-  var title = kind==='sat'?'Einvernehmen des Sachaufwandsträgers':kind==='reg'?'Entscheidung bei fehlendem Einvernehmen':k==='sp'?'Entscheidungsempfehlung':k==='spL'?'Entscheidung der Schulleitung':'Stellungnahme';
+  var title = kind==='sat'?'Einvernehmen des Sachaufwandsträgers':kind==='reg'?'Entscheidung bei fehlendem Einvernehmen':k==='sp'?'Stellungnahme':k==='spL'?'Entscheidung der Schulleitung':'Stellungnahme';
   h='<div class="card taskcard" id="taskCard"><div class="card-hd">'+ico('i-gavel')+'<h2>'+title+'</h2></div>';
   if(k==='spL'){
     h+=empfBox()+'<div class="infobox" style="margin-bottom:6px">'+ico('i-info')+'<span>Die Sachbearbeitung hat den Antrag geprüft und eine Empfehlung abgegeben. Sie entscheiden für die <b>'+esc(STN.sp.org)+'</b>. Sie können der Empfehlung folgen oder davon abweichen.</span></div>';
   } else if(k==='sp'){
-    h+='<span class="fl">Die Schülerin / der Schüler besucht derzeit</span>'+rr('besucht','Sprengelschule','Sprengelschule',f.besucht||'Sprengelschule')+rr('besucht','Gastschule','Gastschule',f.besucht)+
-       '<span class="fl">Sprengelschule</span>'+rr('ort','am Schulsitz','Beschulung am Schulsitz',f.ort||'am Schulsitz',1)+rr('ort','an Außenstelle','Beschulung an Außenstelle',f.ort,1)+
-       '<span class="fl">Beschulungsform</span>'+rr('bform','Einzeltage','Teilzeit – Einzeltage',f.bform||'Einzeltage',1)+rr('bform','Blockunterricht','Blockunterricht',f.bform,1)+ezGrid(f);
+    h+=spForm(f);
   } else if(k==='gs'){
     h+='<span class="fl">Fachklasse für den Ausbildungsberuf</span>'+rr('fk','vorhanden','Fachklasse vorhanden',f.fk||'vorhanden',1)+rr('fk','nicht vorhanden','Keine Fachklasse vorhanden',f.fk,1)+
        '<span class="fl">Aufnahmekapazität</span>'+rr('kap','vorhanden','Kapazität vorhanden',f.kap||'vorhanden',1)+rr('kap','erschöpft','Kapazität erschöpft',f.kap,1)+
@@ -1099,11 +1530,11 @@ function cardTask(k){
 function bindTask(k){
   var card=$('#taskCard'); if(!card) return;
   var f=S.stations[k].form;
-  $$('input[type=radio]',card).forEach(function(r){ r.addEventListener('change',function(){ f[r.name]=r.value; if(r.name==='votum') render(true); }); });
+  $$('input[type=radio]',card).forEach(function(r){ r.addEventListener('change',function(){ f[r.name]=r.value; if(r.name==='votum'||(k==='sp'&&r.name==='bform')) render(true); }); });
   $$('[data-f]',card).forEach(function(el){ el.addEventListener('change',function(){ f[el.dataset.f]=el.value; }); el.addEventListener('input',function(){ f[el.dataset.f]=el.value; }); });
   var ta=$('#begr');
   if(ta) ta.addEventListener('input',function(){
-    f.begr=ta.value; var len=ta.value.length, need=f.votum==='nein'||STN[k].kind==='reg'||k==='spL';
+    f.begr=ta.value; var len=ta.value.length, need=f.votum==='nein'||STN[k].kind==='reg';
     $('#begrCnt').textContent=len+' / 2.000';
     var hEl=$('#begrHint'); hEl.className = need&&len<30?'err':'ok';
     hEl.textContent = need?(len<30?'Mindestens 30 Zeichen erforderlich':'Begründung ausreichend'):'Optional – wird der Akte beigefügt';
@@ -1120,7 +1551,7 @@ function submitVote(k){
   if(k==='sp'){
     /* Sachbearbeitung gibt nur eine Empfehlung ab – entschieden wird von der Schulleitung */
     s.empf={yes:yes, begr:(s.form.begr||'').trim(), at:now(), who:STN.sp.person, role:STN.sp.role, form:JSON.parse(JSON.stringify(s.form))};
-    addLog({t:s.empf.at, ev:'Entscheidungsempfehlung: '+(yes?'Befürwortung':'Ablehnung')+' – an Schulleitung weitergeleitet', org:STN.sp.short, who:STN.sp.person, role:STN.sp.role, lvl:2, sig:'fort'});
+    addLog({t:s.empf.at, ev:'Stellungnahme: '+(yes?'Zustimmung':'Ablehnung')+' empfohlen – an Schulleitung weitergeleitet', org:STN.sp.short, who:STN.sp.person, role:STN.sp.role, lvl:2, sig:'fort'});
     var L=S.stations.spL; L.status='offen'; L.form={};
     S.inbox.spL.push({t:'Entscheidung erforderlich: GS-2026-88421', d:'Empfehlung von '+STN.sp.person+' liegt vor', go:'case', type:'aufgabe'});
     toast('Empfehlung an die Schulleitung gesendet. '+STN.spL.person+' wurde benachrichtigt.');
@@ -1211,7 +1642,7 @@ function issueBescheid(){
 }
 function cardBescheidDone(k){
   var s=S.stations[k], mine=S.bescheid.k===k;
-  return '<div class="card"><div class="card-hd">'+ico('i-seal')+'<h2>Bescheid</h2><span class="sp"></span><span class="st st-abg">Abgeschlossen</span></div>'+bsdObject(S.bescheid,false)+
+  return '<div class="card"><div class="card-hd">'+ico('i-seal')+'<h2>Bescheid</h2><span class="sp"></span><span class="st st-'+S.bescheid.entsch+'">'+(S.bescheid.entsch==='genehmigt'?'Genehmigt':'Abgelehnt')+'</span></div>'+bsdObject(S.bescheid,false)+
     (mine?'<div class="infobox ok" style="margin-top:14px">'+ico('i-check')+'<span>Von Ihrer Stelle erlassen. Kenntnisnahme der übrigen Stellen: '+['sp','gs','satSp','satGs','reg'].filter(function(x){return x!==k&&(x!=='reg'||done('reg'));}).map(function(x){return esc(STN[x].short)+' '+(S.stations[x].kenntnis?'✓':'offen');}).join(' · ')+'</span></div>'
       : s.kenntnis ? '<div class="infobox ok" style="margin-top:14px">'+ico('i-check')+'<span>Zur Kenntnis genommen.</span></div>'
       : '<button class="btn btn-main" id="btnKenntnis" style="margin-top:14px">'+ico('i-check')+' Zur Kenntnis genommen</button>')+'</div>';
@@ -1265,12 +1696,12 @@ function viewCase(){
   var task='';
   if(S.bescheid) task=cardBescheidDone(k);
   else if(S.phase==='bescheid' && issuer()===k) task=cardBescheidCompose(k);
-  else if(k==='sp' && s.empf && !done('sp')) task='<div class="card"><div class="card-hd">'+ico('i-gavel')+'<h2>Entscheidungsempfehlung</h2></div>'+empfBox()+'<div class="infobox">'+ico('i-hour')+'<span><b>Wartet auf die Entscheidung der Schulleitung.</b> '+esc(STN.spL.person)+' wurde benachrichtigt. Sie erhalten eine Nachricht, sobald entschieden ist.</span></div></div>';
-  else if(k==='spL' && s.status==='wartet') task='<div class="card"><div class="infobox">'+ico('i-hour')+'<span><b>Noch keine Empfehlung.</b> Die Sachbearbeitung ('+esc(STN.sp.person)+') prüft den Antrag. Sobald die Entscheidungsempfehlung vorliegt, werden Sie benachrichtigt und können entscheiden. Den Antrag können Sie bereits einsehen.</span></div></div>';
+  else if(k==='sp' && s.empf && !done('sp')) task='<div class="card"><div class="card-hd">'+ico('i-gavel')+'<h2>Stellungnahme</h2></div>'+empfBox()+'<div class="infobox">'+ico('i-hour')+'<span><b>Wartet auf die Entscheidung der Schulleitung.</b> '+esc(STN.spL.person)+' wurde benachrichtigt. Sie erhalten eine Nachricht, sobald entschieden ist.</span></div></div>';
+  else if(k==='spL' && s.status==='wartet') task='<div class="card"><div class="infobox">'+ico('i-hour')+'<span><b>Noch keine Empfehlung.</b> Die Sachbearbeitung ('+esc(STN.sp.person)+') prüft den Antrag. Sobald die Stellungnahme vorliegt, werden Sie benachrichtigt und können entscheiden. Den Antrag können Sie bereits einsehen.</span></div></div>';
   else if(s.status==='offen') task=cardTask(k);
   else if(done(k)) task='<div class="card"><div class="infobox ok">'+ico('i-check')+'<span><b>Ihre Erklärung ist abgegeben ('+voteLabel(k,s.status==='zugestimmt')+', '+esc(s.at)+').</b> Wartet auf: '+(waitingOn()||'Bescheid')+'.</span></div></div>';
   else task='<div class="card"><div class="infobox">'+ico('i-hour')+'<span><b>Angekündigt.</b> Ihre Aufgabe „'+esc(STN[k].task)+'" beginnt, sobald '+(S.mode==='seq'?'die vorherige Stelle':'beide Schulen')+' Stellung genommen '+(S.mode==='seq'?'hat':'haben')+'. Sie können den Antrag bereits einsehen.</span></div></div>';
-  h+=(k==='spL'?cardLog()+task:task+cardLog())+'</div>';
+  h+=task+cardLog()+'</div>';
   $('#mainHost').innerHTML=h;
   bindTask(k); bindBescheid(k);
   var kb=$('#btnKenntnis'); if(kb) kb.addEventListener('click',function(){ kenntnis(k); });
@@ -1306,7 +1737,7 @@ function viewAzubi(){
   var b=S.bescheid;
   function tr(cls,ic,t,d){ return '<div class="ptr '+cls+'"><span class="mk">'+ico(ic,'16px')+'</span><div><div class="tt">'+t+'</div><div class="td">'+d+'</div></div></div>'; }
   var h='<div class="page narrow"><h1 class="hello" style="font-size:2.1rem;margin-bottom:6px">Ihr Gastschulantrag</h1><p class="muted" style="margin-bottom:24px">'+CASE.nr+' · eingereicht am 21.09.2026</p>'+
-    '<div class="card"><div class="card-hd">'+ico('i-route')+'<h2>Aktueller Stand</h2><span class="sp"></span><span class="st '+(b?'st-abg':'st-bearb')+'">'+azubiText()+'</span></div><div class="ptrack">'+
+    '<div class="card"><div class="card-hd">'+ico('i-route')+'<h2>Aktueller Stand</h2><span class="sp"></span><span class="st '+(b?'st-'+b.entsch:'st-bearb')+'">'+(b?(b.entsch==='genehmigt'?'Genehmigt':'Abgelehnt'):azubiText())+'</span></div><div class="ptrack">'+
       tr('done','i-check','Antrag eingegangen','21.09.2026 · Eingangsbestätigung im BayernPortal-Postfach')+
       tr(b?'done':'now',b?'i-check':'i-hour','Prüfung durch die beteiligten Stellen','Schulen und Sachaufwandsträger prüfen Ihren Antrag. Sie müssen nichts tun.')+
       tr(b?'done':'todo',b?'i-check':'i-gavel','Entscheidung',b?'Entschieden von '+esc(STN[b.k].org):'Die entscheidende Stelle ergibt sich aus der Abstimmung.')+
@@ -1438,7 +1869,7 @@ function taskState(k){
   var st=S.stations[k].status;
   if(S.bescheid) return {ok:true, t:'Bescheid erlassen – Kenntnisnahme'};
   if(S.phase==='bescheid' && issuer()===k) return {ok:true, t:'Bescheid erlassen – jetzt fällig'};
-  if(k==='spL' && st==='wartet') return {ok:true, t:'wartet auf die Entscheidungsempfehlung der Sachbearbeitung'};
+  if(k==='spL' && st==='wartet') return {ok:true, t:'wartet auf die Stellungnahme der Sachbearbeitung'};
   if(k==='reg' && (st==='bedingt'||st==='entfaellt')) return {ok:false, t:'Keine Beteiligung – es liegt kein Dissens vor. Kein Zugriff auf den Vorgang.'};
   if(st==='offen') return {ok:true, t:STN[k].task+' · offen · Frist '+STN[k].frist};
   if(st==='wartet') return {ok:true, t:'angekündigt – beginnt nach Stufe 1'};
@@ -1500,7 +1931,7 @@ function finishLogin(){
   toast('Angemeldet als '+(k==='azubi'?'Max Mustermann (Antragsteller)':STN[k].person+' · '+STN[k].short+' – Rolle im Vorgang: '+ROLE_LBL[k]));
 }
 function startAs(k){
-  S.persona=k; S.loggedIn=false; S.session=null; S.screen='mail'; S.mailSel=null; S.login=freshLogin(k);
+  S.persona=k; S.loggedIn=false; S.session=null; S.screen='mail'; S.mailSel=null; S.login=freshLogin(k); resetView();
   $('#protoPanel').classList.remove('open'); render(); window.scrollTo({top:0});
   toast('Postfach von '+OWNER[k]);
 }
@@ -1508,8 +1939,11 @@ function startAs(k){
 /* ============================================================
    ROUTER / RENDER
    ============================================================ */
-function go(t){
+function go(t,reset){
   $('#protoPanel').classList.remove('open');
+  S.fltOpen=false;
+  /* Klick auf "Antragsübersicht"/"Archiv" in der Navigation: Ansicht zurücksetzen, alle Vorgänge zeigen */
+  if(reset && (t==='dash'||t==='archiv')) resetView(t);
   if(t==='mail'){ S.screen='mail'; S.mailSel=null; }
   else if(t==='login'){ S.loggedIn=false; S.deeplink=null; S.login=freshLogin(S.persona); S.screen='login'; }
   else if(!S.loggedIn){ S.deeplink=t; S.login=freshLogin(S.persona); S.screen='login'; }
@@ -1547,7 +1981,7 @@ function renderPanel(){
    SZENARIEN
    ============================================================ */
 var SAMPLE={
-  sp:{form:{besucht:'Sprengelschule', ort:'am Schulsitz', bform:'Einzeltage', jg:'10', tag1:'Dienstag', tag2:'Donnerstag', z1:'08:00–15:15', z2:'08:00–12:30'}, begr:'Fahrzeitersparnis plausibel nachgewiesen, keine Einwände seitens der Sprengelschule.'},
+  sp:{form:{ort:'am Schulsitz', bform:'einzel', ez1jg:'10', ez1a:'Di 08:00–15:15', ez1b:'Do 08:00–12:30', ez2jg:'11', ez2a:'Mi 08:00–15:15', wohnheim:'nein'}, begr:'Fahrzeitersparnis plausibel nachgewiesen, keine Einwände seitens der Sprengelschule.'},
   gs:{form:{fk:'vorhanden', kap:'vorhanden', bform:'Teilzeit (Einzeltage)', unt:'nicht erforderlich'}, begr:'Fachklasse Fachinformatik AE 10b hat freie Plätze.'},
   satSp:{form:{kosten:'Übernahme zugesagt'}, begr:''},
   satGs:{form:{aufn:'zugestimmt'}, begr:''}
@@ -1559,7 +1993,7 @@ function autoVote(k,yes,begr){
   if(k==='sp'){
     /* Empfehlung der Sachbearbeitung, Entscheidung durch die Schulleitung */
     s.empf={yes:yes, begr:s.begr, at:s.at, who:STN.sp.person, role:STN.sp.role, form:JSON.parse(JSON.stringify(s.form))};
-    addLog({t:s.at, ev:'Entscheidungsempfehlung: '+(yes?'Befürwortung':'Ablehnung')+' – an Schulleitung weitergeleitet', org:STN.sp.short, who:STN.sp.person, role:STN.sp.role, lvl:2, sig:'fort'});
+    addLog({t:s.at, ev:'Stellungnahme: '+(yes?'Befürwortung':'Ablehnung')+' – an Schulleitung weitergeleitet', org:STN.sp.short, who:STN.sp.person, role:STN.sp.role, lvl:2, sig:'fort'});
     var L=S.stations.spL; L.status=s.status; L.begr=s.begr; L.at=now(); L.sig='fort'; L.lvl=2; L.who=STN.spL.person; L.role=STN.spL.role; L.seen=true;
     s.at=L.at; s.who=L.who; s.role=L.role;
     addLog({t:L.at, ev:'Entscheidung der Schulleitung: '+voteLabel(k,yes), org:STN.sp.short, who:L.who, role:L.role, lvl:2, sig:'fort'});
@@ -1600,7 +2034,7 @@ document.addEventListener('click',function(e){
   if((t=e.target.closest('[data-lgnext]'))){ var L=S.login; if(L.variant==='buerger'){ L.step=2; } else if(L.step===1&&L.idp){ L.step=2; if(L.hint&&ACCOUNTS[L.idp].indexOf(L.hint)>-1&&!L.pick) L.pick=L.hint; if(L.pick&&ACCOUNTS[L.idp].indexOf(L.pick)<0) L.pick=null; } else if(L.step===2&&L.pick){ L.step=3; } render(true); return; }
   if((t=e.target.closest('[data-lgback]'))){ S.login.step=Math.max(1,S.login.step-1); render(true); return; }
   if((t=e.target.closest('#btnLgDone'))){ finishLogin(); return; }
-  if((t=e.target.closest('[data-go]'))){ e.preventDefault(); go(t.dataset.go); return; }
+  if((t=e.target.closest('[data-go]'))){ e.preventDefault(); go(t.dataset.go, t.dataset.reset==='1'); return; }
   if((t=e.target.closest('[data-mode]'))){ S.mode=t.dataset.mode; recompute(); render(true); toast(S.mode==='seq'?'Laufweg sequenziell – wie der heutige Papierweg.':'Laufweg gestuft-parallel – Schulen gleichzeitig, danach beide Träger gleichzeitig.'); return; }
   if((t=e.target.closest('[data-pseudo]'))){ S.pseudo=t.dataset.pseudo; render(true); return; }
   if((t=e.target.closest('[data-scn]'))){ $('#protoPanel').classList.remove('open'); scenario(t.dataset.scn); return; }
