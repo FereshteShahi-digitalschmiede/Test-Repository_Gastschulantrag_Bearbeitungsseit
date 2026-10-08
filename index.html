@@ -170,6 +170,40 @@ button{font:inherit}
 .agrid2{display:grid;grid-template-columns:1fr 1fr;gap:28px 40px}
 .qbox{margin-top:16px;border:1px solid var(--line);border-radius:6px;padding:12px 14px}
 .rqbar{display:flex;justify-content:flex-end;margin:-8px 0 26px}
+/* Fahrzeitenprüfung (ÖPNV, simuliert) */
+.fz-hd{flex-wrap:wrap}
+.fz-hd .sp{margin-left:auto}
+.fz-hd .btn{font-size:.8rem;padding:6px 14px}
+.fz-src{font-size:.78rem;color:var(--muted);margin:-8px 0 14px}
+.fz-load{display:flex;align-items:center;gap:12px;background:#f4f8fb;border-radius:6px;padding:16px;font-size:.88rem;color:var(--navy)}
+.fz-spin{width:18px;height:18px;border-radius:50%;border:2.5px solid #cfe3f0;border-top-color:var(--blue);animation:fzspin .8s linear infinite;flex:none}
+@keyframes fzspin{to{transform:rotate(360deg)}}
+.fz-routes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fz-r{border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.fz-r.over{border-color:#f0c9c4;background:#fffafa}
+.fz-r .t{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
+.fz-r .t b{font-weight:600;color:var(--ink)}
+.fz-r .t .sub{font-size:.76rem;color:var(--muted)}
+.fz-r .t .vote{margin-left:auto;white-space:nowrap}
+.fz-way{display:grid;grid-template-columns:72px 1fr auto;gap:4px 10px;align-items:center;font-size:.84rem;padding:6px 0;border-top:1px dashed var(--line-2)}
+.fz-way .k{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.fz-way .d{font-weight:700;font-variant-numeric:tabular-nums}
+.fz-way .d.no{color:var(--red)} .fz-way .d.ok{color:var(--green)}
+.fz-bar{grid-column:2/4;position:relative;height:6px;background:var(--grey-bg);border-radius:99px}
+.fz-bar i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--green)}
+.fz-bar i.no{background:var(--red)}
+.fz-bar u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink-2);left:66.67%}
+.fz-r details{margin-top:8px;font-size:.8rem}
+.fz-r summary{cursor:pointer;color:var(--blue-d);font-weight:600}
+.fz-legs{list-style:none;margin:8px 0 0;padding:0 0 0 12px;border-left:2px solid var(--line)}
+.fz-legs li{padding:3px 0;color:var(--ink-2)}
+.fz-legs .ln{display:inline-block;min-width:44px;font-weight:700;font-size:.72rem;background:#e7ebee;color:var(--ink-2);border-radius:4px;padding:0 5px;margin-right:6px;text-align:center}
+.fz-chk{margin-top:14px;display:grid;gap:8px}
+.fz-chk .infobox{font-size:.84rem;padding:11px 14px}
+.fz-chk .infobox.warn{background:var(--amber-bg);color:#6b4600}
+.fz-chk .infobox.warn .icon{color:var(--amber)}
+.fz-chk .infobox.err{background:var(--red-bg);color:#7a1d15}
+.fz-chk .infobox.err .icon{color:var(--red)}
 .btn-rq{background:var(--blue-d);color:#fff;min-width:220px}
 .btn-rq:hover{background:#094e72}
 .taskcard{border:1px solid var(--blue);box-shadow:0 0 0 3px rgba(10,127,184,.08),var(--sh);margin-bottom:14px}
@@ -488,7 +522,8 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
   .tbl tr{grid-template-columns:1fr;gap:10px;padding:14px 16px}
   .tfoot{padding:10px 16px}
   .pager{justify-content:center}
-  .dl,.dl.three,.lw,.lw.seq,.lw-row,.idgrid,.ezgrid,.agrid2{grid-template-columns:1fr}
+  .dl,.dl.three,.lw,.lw.seq,.lw-row,.idgrid,.ezgrid,.agrid2,.fz-routes{grid-template-columns:1fr}
+  .fz-hd .sp{display:none}
   .acard{padding:20px 16px}
   .atitle{font-size:1.3rem}
   .rqbar .btn-rq{width:100%}
@@ -533,6 +568,10 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
     <button class="pb" data-pseudo="sat">Nur Träger<small>Schulen sehen Klarnamen</small></button>
     <button class="pb" data-pseudo="alle">Alle Stellen<small>Hypothese: weniger Bias</small></button>
   </div>
+  <h4>Fahrzeitenprüfung (ÖPNV-Simulation)</h4>
+  <button class="pb" data-fzscn="lang">Sprengelschule über 2 Std.<small>Angaben im Antrag werden bestätigt</small></button>
+  <button class="pb" data-fzscn="kurz">Sprengelschule unter 2 Std.<small>Abweichung zu den Angaben im Antrag</small></button>
+  <button class="pb" data-fzscn="fehler">Schnittstelle nicht erreichbar<small>Rückfall auf manuelle Prüfung</small></button>
   <h4>Szenario abkürzen</h4>
   <button class="pb" data-scn="konsens">Einvernehmen<small>alle vier stimmen zu → Bescheid durch Sprengelschule</small></button>
   <button class="pb" data-scn="dissens">Dissens<small>Träger der Gastschule versagt → Regierung entscheidet</small></button>
@@ -653,6 +692,76 @@ var CASE = {
   ]
 };
 
+/* Fahrzeitenprüfung: simulierte ÖPNV-Auskunft. Später ersetzt durch die ÖPNV-Schnittstelle (z. B. DEFAS Bayern / bayern-fahrplan).
+   Höchstgrenze: 2 Std. je Weg. Varianten über das Prototyp-Panel umschaltbar. */
+var FZ_MAX = 120;
+var FZ = {
+  antrag:{sp:{ab:'05:30', an:'08:00'}, gs:{ab:'07:15', an:'07:45'}},
+  ziele:{
+    sp:{name:'Städt. BS I Augsburg', rolle:'Sprengelschule', beginn:'08:00', ende:'15:15'},
+    gs:{name:'Städt. BS für Informationstechnik München', rolle:'Gastschule', beginn:'07:45', ende:'15:00'}
+  },
+  lang:{
+    sp:{hin:{ab:'05:30', an:'07:52', um:3, legs:[['Fuß','05:30–05:36','Fußweg zur Haltestelle Unterföhring, Bahnhof'],['Bus 233','05:36–05:58','Unterföhring, Bahnhof → München, Arabellapark'],['Bus 100','06:08–06:31','München, Arabellapark → München Hbf'],['RE 9','06:52–07:34','München Hbf → Augsburg Hbf'],['Bus 32','07:41–07:49','Augsburg Hbf → Augsburg, Berufsschulzentrum'],['Fuß','07:49–07:52','Fußweg zur Schule']]},
+        rueck:{ab:'15:20', an:'17:46', um:3}},
+    gs:{hin:{ab:'07:15', an:'07:44', um:0, legs:[['Fuß','07:15–07:18','Fußweg zur Haltestelle Unterföhring, Mitte'],['Bus 188','07:18–07:40','Unterföhring, Mitte → München, Berufsschulzentrum'],['Fuß','07:40–07:44','Fußweg zur Schule']]},
+        rueck:{ab:'15:05', an:'15:36', um:0}}
+  },
+  kurz:{
+    sp:{hin:{ab:'06:20', an:'07:53', um:2, legs:[['Fuß','06:20–06:25','Fußweg zur Haltestelle Unterföhring, Bahnhof'],['S 8','06:25–06:48','Unterföhring → München Hbf (tief)'],['RE 9','07:02–07:41','München Hbf → Augsburg Hbf'],['Bus 32','07:44–07:50','Augsburg Hbf → Augsburg, Berufsschulzentrum'],['Fuß','07:50–07:53','Fußweg zur Schule']]},
+        rueck:{ab:'15:20', an:'16:58', um:2}},
+    gs:null
+  }
+};
+FZ.kurz.gs=FZ.lang.gs;
+function fzMin(a,b){ var x=a.split(':'), y=b.split(':'); return (+y[0]*60 + +y[1]) - (+x[0]*60 + +x[1]); }
+function fzDur(m){ var h=Math.floor(m/60), mm=m%60; return h ? h+':'+(mm<10?'0':'')+mm+' Std.' : mm+' Min.'; }
+var fzOpen={}, fzRun=0;
+function fzStart(){
+  var id=++fzRun; S.fz={st:'laeuft'};
+  setTimeout(function(){
+    if(id!==fzRun || !S.fz || S.fz.st!=='laeuft') return;
+    if(S.fzScn==='fehler'){ S.fz={st:'fehler', at:now()}; addLog({ev:'Fahrzeitenprüfung fehlgeschlagen – ÖPNV-Schnittstelle nicht erreichbar', org:'—', who:'System', role:'ÖPNV-Schnittstelle (Simulation)', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'}); }
+    else {
+      var d=FZ[S.fzScn], sp=fzMin(d.sp.hin.ab,d.sp.hin.an), gs=fzMin(d.gs.hin.ab,d.gs.hin.an);
+      S.fz={st:'ok', at:now(), scn:S.fzScn};
+      addLog({ev:'Fahrzeitenprüfung (ÖPNV): Sprengelschule '+fzDur(sp)+(sp>FZ_MAX?' – über':' – unter')+' 2 Std.; Gastschule '+fzDur(gs), org:'—', who:'System', role:'ÖPNV-Schnittstelle (Simulation)', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'});
+    }
+    if(S.screen==='case') render(true);
+  }, 1600);
+}
+function fzWay(lbl,w){
+  var m=fzMin(w.ab,w.an), no=m>FZ_MAX;
+  return '<div class="fz-way"><span class="k">'+lbl+'</span><span>'+w.ab+' → '+w.an+' Uhr · '+(w.um?w.um+' Umstieg'+(w.um>1?'e':''):'direkt')+'</span><span class="d '+(no?'no':'ok')+'">'+fzDur(m)+'</span>'+
+    '<span></span><span class="fz-bar" title="Markierung: Höchstgrenze 2 Std."><i class="'+(no?'no':'')+'" style="width:'+Math.min(100,m/180*100).toFixed(1)+'%"></i><u></u></span></div>';
+}
+function fzRoute(k,r){
+  var z=FZ.ziele[k], m=Math.max(fzMin(r.hin.ab,r.hin.an),fzMin(r.rueck.ab,r.rueck.an)), no=m>FZ_MAX;
+  return '<div class="fz-r'+(no?' over':'')+'"><div class="t">'+ico('i-route','16px','color:var(--blue);margin-top:2px')+'<div><b>'+esc(z.name)+'</b><div class="sub">'+z.rolle+' · Unterricht '+z.beginn+'–'+z.ende+' Uhr</div></div>'+
+    '<span class="vote '+(no?'no':'ok')+'">'+ico(no?'i-x':'i-check','13px')+' '+(no?'über 2 Std.':'unter 2 Std.')+'</span></div>'+
+    fzWay('Hinweg',r.hin)+fzWay('Rückweg',r.rueck)+
+    '<details data-fzd="'+k+'"'+(fzOpen[k]?' open':'')+'><summary>Verbindung Hinweg anzeigen</summary><ul class="fz-legs">'+
+      r.hin.legs.map(function(l){ return '<li><span class="ln">'+esc(l[0])+'</span>'+esc(l[1])+' · '+esc(l[2])+'</li>'; }).join('')+'</ul></details></div>';
+}
+function fzSection(k){
+  var ps=pseudoFor(k), start=ps?CASE.kind.gemeinde:CASE.kind.wohn, f=S.fz;
+  var h='<div class="asec"><div class="asec-hd fz-hd">'+ico('i-clock')+'Fahrzeitenprüfung (ÖPNV)<span class="sp"></span><span class="pill sig-sys">'+ico('i-cpu','11px')+' Simulation · Schnittstelle folgt</span>'+
+    (f&&f.st!=='laeuft'?'<button class="btn btn-out" data-fzrun>'+ico('i-refresh','14px')+' Erneut abfragen</button>':'')+'</div>'+
+    '<div class="fz-src">Start: <b>'+esc(start)+'</b> (Wohnsitz laut Antrag) · Stichtag: Schultag, Mo 05.10.2026 · Höchstgrenze: <b>2 Std. je Weg</b></div>';
+  if(!f || f.st==='laeuft') return h+'<div class="fz-load"><span class="fz-spin"></span><span>Verbindungen werden über die ÖPNV-Auskunft ermittelt …<br><span class="muted" style="font-size:.8rem">Wohnsitz → Sprengelschule und Wohnsitz → Gastschule, jeweils zum Unterrichtsbeginn und nach Unterrichtsende</span></span></div></div>';
+  if(f.st==='fehler') return h+'<div class="fz-chk"><div class="infobox err">'+ico('i-alert')+'<span><b>Die ÖPNV-Auskunft ist derzeit nicht erreichbar.</b> Bitte versuchen Sie es später erneut oder prüfen Sie die Fahrzeiten manuell in der Fahrplanauskunft und dokumentieren Sie das Ergebnis in Ihrer Begründung.<br><span style="font-size:.78rem">Abfrage am '+esc(f.at)+'</span></span></div></div></div>';
+  var d=FZ[f.scn], sp=fzMin(d.sp.hin.ab,d.sp.hin.an), gs=fzMin(d.gs.hin.ab,d.gs.hin.an), a=FZ.antrag, msgs=[];
+  if(sp>FZ_MAX && gs<=FZ_MAX) msgs.push('<div class="infobox ok">'+ico('i-check')+'<span><b>Fahrzeit zur Sprengelschule überschreitet die Höchstgrenze</b> (+'+fzDur(sp-FZ_MAX)+'). Die Gastschule ist in '+fzDur(gs)+' erreichbar – Ersparnis '+fzDur(sp-gs)+' je Weg. Der angegebene Grund „Fahrzeit / ÖPNV-Anbindung" ist damit belegt.</span></div>');
+  else if(sp<=FZ_MAX) msgs.push('<div class="infobox warn">'+ico('i-alert')+'<span><b>Die Sprengelschule ist innerhalb von 2 Std. erreichbar</b> ('+fzDur(sp)+'). Die Fahrzeit allein begründet keinen wichtigen Grund – bitte weitere Gründe des Antrags prüfen.</span></div>');
+  else msgs.push('<div class="infobox err">'+ico('i-alert')+'<span><b>Auch die Gastschule überschreitet die Höchstgrenze</b> ('+fzDur(gs)+').</span></div>');
+  var dev=Math.abs(fzMin(a.sp.ab,d.sp.hin.ab));
+  msgs.push(dev<=15
+    ? '<div class="infobox">'+ico('i-info')+'<span><b>Angaben im Antrag plausibel:</b> Antragsteller:in nennt Abfahrt '+a.sp.ab+' Uhr zur Sprengelschule und '+a.gs.ab+' Uhr zur Gastschule – die ÖPNV-Auskunft bestätigt dies.</span></div>'
+    : '<div class="infobox warn">'+ico('i-alert')+'<span><b>Abweichung zu den Angaben im Antrag:</b> Antragsteller:in nennt Abfahrt '+a.sp.ab+' Uhr zur Sprengelschule, die schnellste Verbindung fährt erst um '+d.sp.hin.ab+' Uhr ('+fzDur(dev)+' später). Ggf. Rückfrage stellen.</span></div>');
+  return h+'<div class="fz-routes">'+fzRoute('sp',d.sp)+fzRoute('gs',d.gs)+'</div><div class="fz-chk">'+msgs.join('')+'</div>'+
+    '<div class="fz-src" style="margin:10px 0 0">Automatisch abgefragt am '+esc(f.at)+' · Ergebnis im Revisionsprotokoll dokumentiert</div></div>';
+}
+
 var VORLAGEN = {
   schule:['Keine Fachklasse bzw. kein Schwerpunkt an der Gastschule vorhanden.','Aufnahmekapazität in der Fachklasse ist erschöpft.','Kein wichtiger Grund erkennbar – die Fahrzeitersparnis liegt unter den Richtwerten.'],
   sat:['Kein Einvernehmen zur Übernahme des Gastschulbeitrags, da kein wichtiger Grund erkennbar ist.','Einvernehmen wird versagt, da die Sprengelschule die Fachklasse in zumutbarer Erreichbarkeit führt.'],
@@ -695,7 +804,7 @@ function freshState(){
   var st={};
   ORDER.concat(['reg','spL']).forEach(function(k){ st[k]={status:'wartet', votum:null, begr:'', at:null, sig:null, who:null, form:{}, seen:false, kenntnis:false}; });
   st.sp.seen=true; st.sp.notified=true;
-  return {persona:'sp', screen:'mail', loggedIn:false, session:null, mailMode:'mail', mailSel:null, deeplink:null, login:freshLogin('sp'), linkOpened:false, mode:'gestuft', pseudo:'sat', upgraded:false, kpi:'alle', stations:st, bescheid:null, phase:'umlauf', linkIssued:false,
+  return {persona:'sp', screen:'mail', loggedIn:false, session:null, mailMode:'mail', mailSel:null, deeplink:null, login:freshLogin('sp'), linkOpened:false, mode:'gestuft', pseudo:'sat', fz:null, fzScn:'lang', upgraded:false, kpi:'alle', stations:st, bescheid:null, phase:'umlauf', linkIssued:false,
     inbox:{sp:[{t:'Neuer Vorgang zugewiesen: GS-2026-88421', d:'21.09.2026 · Aufgabe: Entscheidungsempfehlung', go:'case', type:'zuweisung', at:'21.09.2026, 14:15'}], spL:[], gs:[], satSp:[], satGs:[], reg:[], azubi:[{t:'Eingangsbestätigung GS-2026-88421', d:'21.09.2026 · BayernPortal-Postfach', go:'case', type:'eingang', at:'21.09.2026, 14:12'}]},
     log:[
       {t:'21.09.2026, 14:15', ev:'Vorgang zugewiesen an Thomas Schneider', org:'Städt. BS I Augsburg', who:'System', role:'Zuteilungsregel „Fachinformatik"', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'},
@@ -964,6 +1073,7 @@ function cardAntrag(k){
         f('Sprengel-Zugehörigkeit','<b>Städt. BS I Augsburg</b> <span class="muted">(über Betriebssitz)</span>')+f('Gewünschte Gastschule','<b>Städt. BS München</b>')+
         f('Ausbildungsberuf · Dauer der Ausbildung','<b>'+esc(c.beruf)+'</b><br>'+esc(c.dauer))+f('Ausbildungsbetrieb','<b>'+esc(c.betrieb.name)+'</b><br>'+esc(c.betrieb.adr))+
       '</div></div>'+
+    fzSection(k)+
     '<div class="asec agrid2">'+
       '<div><div class="asec-hd">'+ico('i-quote')+'Begründung des Antrags</div>'+
         f('Angegebene Begründung','<b>'+esc(c.begrKat)+'</b>')+
@@ -1261,6 +1371,7 @@ function viewCase(){
     return;
   }
   if(s.status==='offen' && !s.seen){ s.seen=true; if(k!=='sp') addLog({ev:'Vorgang übernommen', org:STN[k].short, who:STN[k].person, role:STN[k].role, lvl:2, sig:'fort'}); }
+  if(!S.fz) fzStart();
   h+=cardAntrag(k);
   var task='';
   if(S.bescheid) task=cardBescheidDone(k);
@@ -1273,6 +1384,7 @@ function viewCase(){
   h+=(k==='spL'?cardLog()+task:task+cardLog())+'</div>';
   $('#mainHost').innerHTML=h;
   bindTask(k); bindBescheid(k);
+  $$('[data-fzd]').forEach(function(d){ d.addEventListener('toggle',function(){ fzOpen[d.dataset.fzd]=d.open; }); });
   var kb=$('#btnKenntnis'); if(kb) kb.addEventListener('click',function(){ kenntnis(k); });
 }
 function waitingOn(){ return ORDER.concat(['reg']).filter(function(x){return S.stations[x].status==='offen';}).map(function(x){return STN[x].short;}).join(', '); }
@@ -1539,6 +1651,7 @@ function renderPanel(){
   }).join('');
   $$('#protoPanel [data-mode]').forEach(function(b){ b.classList.toggle('on',b.dataset.mode===S.mode); });
   $$('#protoPanel [data-pseudo]').forEach(function(b){ b.classList.toggle('on',b.dataset.pseudo===S.pseudo); });
+  $$('#protoPanel [data-fzscn]').forEach(function(b){ b.classList.toggle('on',b.dataset.fzscn===S.fzScn); });
   $$('#protoPanel [data-go]').forEach(function(b){ b.classList.toggle('on',b.dataset.go===S.screen); });
   $$('#protoPanel [data-persona]').forEach(function(b){ var k=b.dataset.persona; if(S.inbox[k]){ normInbox(k); var u=S.inbox[k].filter(function(m){return !m.read;}).length; if(u){ var sm=b.querySelector('small'); sm.textContent+=' · ✉ '+u+' ungelesen'; } } });
 }
@@ -1573,7 +1686,7 @@ function scenario(n){
     if(any.length) addLog({ev:'Frist-Erinnerung versendet an: '+any.join(', '), org:'—', who:'System', role:'Fristüberwachung', lvl:5, sig:'sys', resp:'Schulleitung Städt. BS I Augsburg'});
     toast(any.length?'Erinnerung versendet an: '+any.join(', '):'Keine offene Aufgabe – keine Erinnerung nötig.'); render(true); return;
   }
-  var mode=S.mode, ps=S.pseudo; S=freshState(); S.mode=mode; S.pseudo=ps; clock=0; readCount={}; bdraft.begr=''; recompute();
+  var mode=S.mode, ps=S.pseudo, fzs=S.fzScn; S=freshState(); S.mode=mode; S.pseudo=ps; S.fzScn=fzs; clock=0; readCount={}; bdraft.begr=''; recompute();
   autoVote('sp',true); autoVote('gs',true); autoVote('satSp',true);
   if(n==='konsens'){ autoVote('satGs',true); S.inbox.sp.push({t:'Bescheid bereit: GS-2026-88421', d:'Einvernehmen aller Stellen liegt vor', go:'case', type:'bereit'}); S.persona='sp'; toast('Szenario Einvernehmen: alle vier Stellen haben zugestimmt – Bescheid durch die Sprengelschule.'); }
   else { S.upgraded=true; addLog({ev:'Anmeldung über Landesportal – Delegierte Identität hochgestuft auf Funktionsidentität', org:STN.satGs.short, who:STN.satGs.person, role:STN.satGs.role, lvl:2, sig:'fort'});
@@ -1603,6 +1716,8 @@ document.addEventListener('click',function(e){
   if((t=e.target.closest('[data-go]'))){ e.preventDefault(); go(t.dataset.go); return; }
   if((t=e.target.closest('[data-mode]'))){ S.mode=t.dataset.mode; recompute(); render(true); toast(S.mode==='seq'?'Laufweg sequenziell – wie der heutige Papierweg.':'Laufweg gestuft-parallel – Schulen gleichzeitig, danach beide Träger gleichzeitig.'); return; }
   if((t=e.target.closest('[data-pseudo]'))){ S.pseudo=t.dataset.pseudo; render(true); return; }
+  if((t=e.target.closest('[data-fzscn]'))){ S.fzScn=t.dataset.fzscn; fzStart(); render(true); toast('Fahrzeitenprüfung: Variante umgestellt – Abfrage wird wiederholt.'); return; }
+  if((t=e.target.closest('[data-fzrun]'))){ fzStart(); render(true); return; }
   if((t=e.target.closest('[data-scn]'))){ $('#protoPanel').classList.remove('open'); scenario(t.dataset.scn); return; }
   if((t=e.target.closest('[data-doc]'))){ $('#docTitle').textContent=CASE.docs[+t.dataset.doc].n; $('#ovDoc').hidden=false; return; }
   if((t=e.target.closest('[data-open]'))){ $('#'+t.dataset.open).hidden=false; return; }
