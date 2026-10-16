@@ -660,6 +660,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xm
 <body>
 <div id="protoBar">
   <b>PROTOTYP</b>
+  <button type="button" class="api aus" id="protoLogin" hidden title="Anmeldung über Keycloak (Testkonten, Passwort: test)">Anmelden</button>
   <button type="button" class="api aus" id="protoApi" title="Backend-Verbindung. Adresse mit ?api=<URL>, abschalten mit ?api=aus. Klick prüft erneut.">Backend: prüfe …</button>
   <span class="lbl">Gastschulverwaltung · Klickdummy v2 · keine echten Daten</span>
   <span class="who" id="protoWho"></span>
@@ -2161,6 +2162,11 @@ var Backend = (function(){
     var b = $('#protoApi'); if(!b) return;
     b.className = 'api ' + (verbunden ? 'an' : 'aus');
     b.textContent = basis === 'aus' ? 'Backend: aus' : verbunden ? 'Backend: ' + basis.replace(/^https?:\/\//, '') : 'Backend nicht erreichbar';
+    // Anmeldung ist beim ersten (synchronen) Aufruf mit ?api=aus noch nicht definiert
+    var l = $('#protoLogin'), a = typeof Anmeldung !== 'undefined' && Anmeldung.aktuell();
+    l.hidden = !verbunden;
+    l.className = 'api ' + (a ? 'an' : 'aus');
+    l.textContent = a ? 'Abmelden · ' + a.name : 'Anmelden (Keycloak)';
   }
   function pruefen(){
     if(basis === 'aus'){ verbunden = false; anzeigen(); return Promise.resolve(false); }
@@ -2172,10 +2178,12 @@ var Backend = (function(){
       .then(function(){ clearTimeout(t); anzeigen(); return verbunden; });
   }
   function anfrage(methode, pfad, daten){
-    var opt = {method: methode, headers: {}};
+    var opt = {method: methode, headers: {}}, tok = Anmeldung.token();
+    if(tok) opt.headers.Authorization = 'Bearer ' + tok;
     if(daten !== undefined){ opt.body = JSON.stringify(daten); opt.headers['Content-Type'] = 'application/json'; }
     return fetch(basis + pfad, opt).then(function(r){
       return r.json().catch(function(){ return null; }).then(function(j){
+        if(r.status === 401 && tok){ Anmeldung.vergessen(); anzeigen(); }
         if(!r.ok){
           var m = (j && j.fehler) ? j.fehler.map(function(f){ return f.meldung; }).join(' · ') : (j && j.message) || ('Fehler ' + r.status);
           var e = new Error(m); e.status = r.status; throw e;
@@ -2190,6 +2198,62 @@ var Backend = (function(){
     get: function(p){ return anfrage('GET', p); },
     post: function(p, d){ return anfrage('POST', p, d); }
   };
+})();
+
+/* Anmeldung über Keycloak (OpenID Connect, Authorization Code + PKCE) – ohne Zusatzbibliothek.
+   Token liegt nur im sessionStorage dieses Tabs. Das Login bestimmt die Stelle (Persona). */
+var Anmeldung = (function(){
+  var SCHLUESSEL = 'gs_anmeldung';
+  function b64url(bytes){ return btoa(String.fromCharCode.apply(null, new Uint8Array(bytes))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function zufall(n){ var a = new Uint8Array(n); crypto.getRandomValues(a); return b64url(a); }
+  function claims(jwt){ try { var t = jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(t)))); } catch(e){ return {}; } }
+  function aktuell(){ try { var a = JSON.parse(sessionStorage.getItem(SCHLUESSEL) || 'null'); return a && a.exp*1000 > Date.now() + 10000 ? a : null; } catch(e){ return null; } }
+  function ziel(){ return location.origin + location.pathname; }
+  function anmelden(){
+    Backend.get('/konfiguration').then(function(k){
+      var cfg = k.anmeldung, verifier = zufall(32), state = zufall(16);
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)).then(function(h){
+        sessionStorage.setItem('gs_pkce', JSON.stringify({verifier: verifier, state: state, issuer: cfg.issuer, clientId: cfg.clientId, suche: location.search}));
+        location.href = cfg.issuer + '/protocol/openid-connect/auth?' + new URLSearchParams({client_id: cfg.clientId, response_type: 'code', scope: 'openid',
+          redirect_uri: ziel(), code_challenge: b64url(h), code_challenge_method: 'S256', state: state, ui_locales: 'de'});
+      });
+    }).catch(function(e){ toast('Anmeldung nicht möglich: ' + e.message); });
+  }
+  /* Rückkehr von Keycloak: Code gegen Token tauschen, Adresse bereinigen */
+  var rueckkehr = (function(){
+    var q = new URLSearchParams(location.search), code = q.get('code');
+    if(!code) return Promise.resolve(null);
+    var p = null; try { p = JSON.parse(sessionStorage.getItem('gs_pkce') || 'null'); } catch(e){}
+    sessionStorage.removeItem('gs_pkce');
+    history.replaceState(null, '', ziel() + (p && p.suche ? p.suche : ''));
+    if(!p || p.state !== q.get('state')) return Promise.resolve(null);
+    return fetch(p.issuer + '/protocol/openid-connect/token', {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({grant_type: 'authorization_code', code: code, redirect_uri: ziel(), client_id: p.clientId, code_verifier: p.verifier})})
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(new Error('Token-Abruf fehlgeschlagen (' + r.status + ')')); })
+      .then(function(t){
+        var c = claims(t.access_token);
+        var a = {token: t.access_token, idToken: t.id_token, exp: c.exp, name: c.name || c.preferred_username, organisationen: c.organisationen || [], rollen: c.rollen || [], issuer: p.issuer, clientId: p.clientId};
+        sessionStorage.setItem(SCHLUESSEL, JSON.stringify(a));
+        return a;
+      })
+      .catch(function(e){ setTimeout(function(){ toast('Anmeldung fehlgeschlagen: ' + e.message); }, 0); return null; });
+  })();
+  function abmelden(){
+    var a = aktuell(); sessionStorage.removeItem(SCHLUESSEL);
+    if(a && a.idToken) location.href = a.issuer + '/protocol/openid-connect/logout?' + new URLSearchParams({client_id: a.clientId, id_token_hint: a.idToken, post_logout_redirect_uri: ziel()});
+  }
+  /* Angemeldete Organisation/Funktion → Persona des Klickdummys */
+  function persona(){
+    var a = aktuell(); if(!a) return null;
+    var ks = Object.keys(API_STELLE).filter(function(k){ return a.organisationen.indexOf(API_STELLE[k].org) >= 0; });
+    if(!ks.length) return null;
+    if(ks.indexOf('sp') >= 0) return a.rollen.indexOf('schulleitung') >= 0 ? 'spL' : 'sp';
+    return ks[0];
+  }
+  return {anmelden: anmelden, abmelden: abmelden, rueckkehr: rueckkehr, aktuell: aktuell, persona: persona,
+    token: function(){ var a = aktuell(); return a && a.token; },
+    zustaendig: function(k){ var a = aktuell(); return !!(a && API_STELLE[k] && a.organisationen.indexOf(API_STELLE[k].org) >= 0); },
+    vergessen: function(){ sessionStorage.removeItem(SCHLUESSEL); }};
 })();
 
 /* Persona → Stelle im Backend (Organisation und Rolle im Laufweg) */
@@ -2210,7 +2274,7 @@ function apiDatum(iso){ var d=new Date(iso); return p2(d.getDate())+'.'+p2(d.get
 function apiZeit(iso){ var d=new Date(iso); return apiDatum(iso)+', '+p2(d.getHours())+':'+p2(d.getMinutes()); }
 function apiTag(iso){ var d=/^\d{4}-\d{2}-\d{2}$/.test(iso)?new Date(iso+'T12:00:00'):new Date(iso); return p2(d.getDate())+'.'+p2(d.getMonth()+1)+'.'+d.getFullYear(); }
 function kurzSchule(n){ return String(n||'').replace(/\s*\(.*\)\s*$/,'').replace(/^Städtische Berufsschule/,'Städt. BS').replace(/^Staatliche Berufsschule/,'Staatl. BS'); }
-function adrText(a){ return a ? a.strasse+' '+a.hausnummer+', '+a.plz+' '+a.ort : '—'; }
+function adrText(a){ return a ? (a.strasse ? a.strasse+' '+a.hausnummer+', ' : '')+a.plz+' '+a.ort : '—'; }
 
 var REMOTE = {rows:{}, stand:{}, laedt:{}};
 var DEMO = null;   // gesicherter Demo-Vorgang, solange ein Backend-Vorgang geöffnet ist
@@ -2219,6 +2283,11 @@ var DEMO = null;   // gesicherter Demo-Vorgang, solange ein Backend-Vorgang geö
 function remoteLaden(k){
   var a = API_STELLE[k];
   if(!a || !Backend.verbunden() || REMOTE.laedt[k] || (REMOTE.stand[k] && Date.now()-REMOTE.stand[k] < 3000)) return;
+  if(!Anmeldung.zustaendig(k)){
+    REMOTE.rows[k] = [];
+    if(!REMOTE.hinweis){ REMOTE.hinweis = true; toast('Echte Vorgänge: über „Anmelden (Keycloak)" in der Prototyp-Leiste einloggen.'); }
+    return;
+  }
   REMOTE.laedt[k] = true;
   Backend.get('/vorgaenge?organisation='+encodeURIComponent(a.org)).then(function(liste){
     REMOTE.rows[k] = liste.filter(function(v){
@@ -2262,7 +2331,7 @@ function uebernehmen(v){
     remote:true, id:v.id, nr:v.aktenzeichen, eingangKurz:apiDatum(v.eingegangenAm),
     eingang:(function(d){ return d.getDate()+'. '+MONATE[d.getMonth()]+' '+d.getFullYear(); })(new Date(v.eingegangenAm)),
     wechselVon:kurzSchule(spName), wechselNach:kurzSchule(gsName),
-    kind:{name:v.schueler, pseudo:'S-'+v.aktenzeichen.slice(-4), geb:sch.geburtsdatum?apiTag(sch.geburtsdatum):'—', wohn:adrText(sch.adresse), landkreis:'', gemeinde:sch.adresse?sch.adresse.plz+' '+sch.adresse.ort:'—'},
+    kind:{name:v.schueler, pseudo:v.pseudonymisiert ? v.schueler.replace(/^Schüler:in /,'') : 'S-'+v.aktenzeichen.slice(-4), geb:sch.geburtsdatum?apiTag(sch.geburtsdatum):'—', wohn:adrText(sch.adresse), landkreis:'', gemeinde:sch.adresse?sch.adresse.plz+' '+sch.adresse.ort:'—'},
     sorge:{name:a.gestelltDurch==='selbst'?v.schueler:(ez?ez.vorname+' '+ez.nachname:'—'), mail:sch.email||(ez&&ez.email)||'—', tel:sch.telefon||(ez&&ez.telefon)||'—'},
     betrieb:{name:bt?bt.name:'—', adr:bt?adrText(bt.adresse):'—', vertr:'', strasse:bt?bt.adresse.strasse+' '+bt.adresse.hausnummer:'—', plz:bt?bt.adresse.plz:'', ort:bt?bt.adresse.ort:'', landkreis:'', ansprech:'—', mail:'—', tel:'—', fax:'—'},
     besch:{ja:au.art!=='ohne_ausbildungsvertrag', art:art, fachklasse:au.fachklasse||'—', fkSchule:kurzSchule(spName), bvj:false, bgj:false},
@@ -2271,7 +2340,7 @@ function uebernehmen(v){
     begr:(a.begruendung||{}).text||'', fahrt:null, fz:v.fahrzeit,
     docs:v.dokumente.map(function(d){
       return {n:d.dateiname, m:Math.max(1,Math.round(d.groesseBytes/1024))+' KB'+(d.besondereKategorie?' · Gesundheitsdaten (Art. 9 DSGVO)':''),
-              see:d.besondereKategorie?['sp','spL','reg']:['sp','spL','gs','satSp','satGs','reg'], art9:d.besondereKategorie};
+              see:d.gesperrt?[]:d.besondereKategorie?['sp','spL','reg']:['sp','spL','gs','satSp','satGs','reg'], art9:d.besondereKategorie};
     })
   };
   // Namen der Stellen im Laufweg dieses Vorgangs
@@ -2314,8 +2383,9 @@ function remoteVote(k){
   var rolle = API_STELLE[k].rolle, pfad = k==='sp' ? 'empfehlung' : 'erklaerung';
   var angaben = {};
   Object.keys(f).forEach(function(x){ if(x!=='votum' && x!=='begr' && f[x]!=null && typeof f[x]!=='object' && x.length<=40) angaben[x]=String(f[x]).slice(0,200); });
-  var body = {votum:yes?'zustimmung':'ablehnung', begruendung:(f.begr||'').trim()||undefined, angaben:angaben,
-    akteur:{name:link?'Inhaber:in des Links':STN[k].person, funktion:link?'Signatur-Link · '+(STN[k].linkMail||''):STN[k].role, ebene:link?4:2}};
+  /* Wer handelt, ergibt sich aus der Anmeldung (Backend) */
+  if(link || !Anmeldung.zustaendig(k)){ toast('Für Backend-Vorgänge bitte als zuständige Stelle über Keycloak anmelden.'); return; }
+  var body = {votum:yes?'zustimmung':'ablehnung', begruendung:(f.begr||'').trim()||undefined, angaben:angaben};
   var btn=$('#btnSubmit'); if(btn){ btn.disabled=true; btn.textContent='Wird übermittelt …'; }
   Backend.post('/vorgaenge/'+encodeURIComponent(S.remote.id)+'/stellen/'+rolle+'/'+pfad, body).then(function(v){
     uebernehmen(v); REMOTE.stand={};
@@ -2373,6 +2443,7 @@ document.addEventListener('click',function(e){
   if((t=e.target.closest('[data-lgback]'))){ S.login.step=Math.max(1,S.login.step-1); render(true); return; }
   if((t=e.target.closest('#btnLgDone'))){ finishLogin(); return; }
   if((t=e.target.closest('[data-go]'))){ e.preventDefault(); go(t.dataset.go, t.dataset.reset==='1'); return; }
+  if((t=e.target.closest('#protoLogin'))){ if(Anmeldung.aktuell()) Anmeldung.abmelden(); else Anmeldung.anmelden(); return; }
   if((t=e.target.closest('#protoApi'))){ Backend.pruefen().then(function(ok){ REMOTE.stand={}; toast(ok?'Backend verbunden.':'Backend nicht erreichbar – Simulation aktiv.'); render(true); }); return; }
   if((t=e.target.closest('[data-mode]')) && S.remote){ toast('Der Laufweg-Modus eines Backend-Vorgangs wird im Backend festgelegt.'); return; }
   if((t=e.target.closest('[data-mode]'))){ S.mode=t.dataset.mode; recompute(); render(true); toast(S.mode==='seq'?'Laufweg sequenziell – wie der heutige Papierweg.':'Laufweg gestuft-parallel – Schulen gleichzeitig, danach beide Träger gleichzeitig.'); return; }
@@ -2398,7 +2469,15 @@ $('#btnRueckSend').addEventListener('click',function(){
 });
 
 S=freshState(); recompute(); render();
-Backend.bereit.then(function(){ Backend.anzeigen(); if(Backend.verbunden() && S.screen==='dash') render(true); });
+Backend.bereit.then(function(){ return Anmeldung.rueckkehr; }).then(function(a){
+  Backend.anzeigen();
+  if(a){
+    var k = Anmeldung.persona();
+    if(!k){ toast('Das Konto ist keiner Stelle des Prototyps zugeordnet.'); return; }
+    S.persona = k; S.loggedIn = true; S.session = 'sso'; S.upgraded = true; S.screen = 'dash'; S.login = freshLogin(k); REMOTE.stand = {};
+    render(); toast('Angemeldet als ' + a.name + ' · ' + STN[k].org);
+  } else if(Backend.verbunden() && S.screen==='dash') render(true);
+});
 })();
 </script>
 </body>
